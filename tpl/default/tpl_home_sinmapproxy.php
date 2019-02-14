@@ -34,12 +34,12 @@
                         <li><a href="<?php echo $baseHref?>"><img src="tpl/default/img/logo.png" class="hidden-xs" /></a></li>
                         <li><div class="vertical-line"></div></li>
 
-                        <?php if ($mapid == 'poum') : ?>
-                            <li><a href="#" class="reports"><img src="tpl/default/img/menuDoc.png" /></a></li>
-                        <?php endif; ?>
                         <li><a href="#" class="layers"><img src="tpl/default/img/menuLayers.png" /></a></li>
                         <li><a href="#" class="search"><img src="tpl/default/img/menuSearch.png" /></a></li>
                         <li><a href="#" class="print"><img src="tpl/default/img/menuPrint.png" /></a></li>
+                        <?php if ($mapid == 'poum') : ?>
+                            <li><a href="#" class="reports"><img src="tpl/default/img/menuDoc.png" /></a></li>
+                        <?php endif; ?>
                     </ul>
             
                 </div>
