@@ -1,0 +1,107 @@
+@font-face {
+	font-family:custom;
+	src:url(http://www.castellbisbal.cat/themes/castellbisbal/fonts/custom/regular.eot);
+	src:url(http://www.castellbisbal.cat/themes/castellbisbal/fonts/custom/regular.eot?#iefix) format("embedded-opentype"),url(http://www.castellbisbal.cat/themes/castellbisbal/fonts/custom/regular.woff) format("woff"),url(http://www.castellbisbal.cat/themes/castellbisbal/fonts/custom/regular.ttf) format("truetype"),url(http://www.castellbisbal.cat/themes/castellbisbal/fonts/custom/regular.svgz#IconicStrokeRegular) format("svg"),url(http://www.castellbisbal.cat/themes/castellbisbal/fonts/custom/regular.svg#IconicStrokeRegular) format("svg");
+	font-weight:400;
+	font-style:normal;
+}
+
+@font-face {
+	font-family:custom;
+	src:url(http://www.castellbisbal.cat/themes/castellbisbal/fonts/custom/regular-italic.eot);
+	src:url(http://www.castellbisbal.cat/themes/castellbisbal/fonts/custom/regular-italic.eot?#iefix) format("embedded-opentype"),url(http://www.castellbisbal.cat/themes/castellbisbal/fonts/custom/regular-italic.woff) format("woff"),url(http://www.castellbisbal.cat/themes/castellbisbal/fonts/custom/regular-italic.ttf) format("truetype"),url(http://www.castellbisbal.cat/themes/castellbisbal/fonts/custom/regular-italic.svgz#IconicStrokeRegular) format("svg"),url(http://www.castellbisbal.cat/themes/castellbisbal/fonts/custom/regular-italic.svg#IconicStrokeRegular) format("svg");
+	font-weight:400;
+	font-style:italic;
+}
+
+@font-face {
+	font-family:custom;
+	src:url(http://www.castellbisbal.cat/themes/castellbisbal/fonts/custom/bold-italic.eot);
+	src:url(http://www.castellbisbal.cat/themes/castellbisbal/fonts/custom/bold-italic.eot?#iefix) format("embedded-opentype"),url(http://www.castellbisbal.cat/themes/castellbisbal/fonts/custom/bold-italic.woff) format("woff"),url(http://www.castellbisbal.cat/themes/castellbisbal/fonts/custom/bold-italic.ttf) format("truetype"),url(http://www.castellbisbal.cat/themes/castellbisbal/fonts/custom/bold-italic.svgz#IconicStrokeRegular) format("svg"),url(http://www.castellbisbal.cat/themes/castellbisbal/fonts/custom/bold-italic.svg#IconicStrokeRegular) format("svg");
+	font-weight:700;
+	font-style:italic;
+}
+
+body {
+	color:rgb(188,179,209);
+	font-size:20px;
+	font-family:Custom,"Open Sans",sans-serif;
+	background-size: contain;
+	background-color: #000;
+}
+
+a {
+	text-decoration: none;
+	color:rgb(188,179,209);
+}
+
+.menu {
+	list-style: none;
+	background-color: #58267b;
+	padding: 10px 10px 0 10px;
+    top: 50px;
+    margin-left: -200px;
+	left: 50%;
+    border: 1px solid #222222;
+    box-shadow: 5px 5px 0 0 rgba(0, 0, 0, 0.3);
+    position: absolute;
+    overflow: hidden;
+    color: #fff;
+	width: 400px;
+}
+
+.menu li {
+	float: left;
+}
+
+.menu .label {
+	padding-top: 10px;
+	padding-left: 70px;
+	text-transform: uppercase;
+}
+
+.menu .info {
+	padding-top: 24px;
+	float: right;
+}
+
+.menu .info a.btn,
+button.ui-button {
+	border-radius: 10px;
+	background-color: #8867a0;
+	color: #fff;
+	padding: 8px 10px;
+    line-height: 15px;
+}
+
+.menu .info a.btn {
+	border-radius: 10px;
+	padding: 0 6px;
+	font-size: 12px;
+	font-weight: bold;
+}
+
+.ui-dialog {
+	width: 350px !important;
+}
+
+.mapas {
+	width:800px;
+	height:400px;
+	background-color:rgba(88,38,123,0.7);
+	background-position:center;
+	position:fixed;
+	margin-left:-400px;
+	top:200px;
+	left:50%;
+	text-align:center;
+	vertical-align:middle;
+}
+
+.req {
+	font-size: 12px;
+}
+
+td {
+	padding: 20px;
+}

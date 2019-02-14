@@ -1,0 +1,79 @@
+<!doctype html>
+
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+
+	<title>Geoportal Castellbisbal</title>
+	<meta name="description" content="Geoportal Castellbisbal">
+	<meta name="author" content="PSIG">
+
+    <link rel="shortcut icon" href="http://www.castellbisbal.cat/themes/castellbisbal/images/favicons/favicon.ico"> 
+    <link rel="apple-touch-icon" sizes="57x57" href="http://www.castellbisbal.cat/front/view/images/favicons/apple-touch-icon-57x57.png"> 
+    <link rel="apple-touch-icon" sizes="114x114" href="http://www.castellbisbal.cat/front/view/images/favicons/apple-touch-icon-114x114.png"> 
+    <link rel="apple-touch-icon" sizes="72x72" href="http://www.castellbisbal.cat/front/view/images/favicons/apple-touch-icon-72x72.png"> 
+    <link rel="apple-touch-icon" sizes="60x60" href="http://www.castellbisbal.cat/front/view/images/favicons/apple-touch-icon-60x60.png"> 
+    <link rel="apple-touch-icon" sizes="76x76" href="http://www.castellbisbal.cat/front/view/images/favicons/apple-touch-icon-76x76.png"> 
+    <link rel="icon" type="image/png" href="http://www.castellbisbal.cat/front/view/images/favicons/favicon-96x96.png" sizes="96x96"> 
+    <link rel="icon" type="image/png" href="http://www.castellbisbal.cat/themes/castellbisbal/images/favicons/favicon-16x16.png" sizes="16x16">
+    <link rel="icon" type="image/png" href="http://www.castellbisbal.cat/themes/castellbisbal/images/favicons/favicon-32x32.png" sizes="32x32"><meta name="msapplication-TileColor" content="#cee1ef"> 
+    <meta name="msapplication-config" content="http://www.castellbisbal.cat/front/view/images/favicons/browserconfig.xml">
+    
+	<link rel="stylesheet" href="http://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+	<link rel="stylesheet" href="static/styles.css?v=1.0">
+
+</head>
+
+<body>
+
+<div id="credits" title="Crèdits">
+	<p>Contacte amb nosaltres: <a href="mailto:servei.geoportal@castellbisbal.cat">servei.geoportal@castellbisbal.cat</a></p>
+</div>
+
+<ul class="menu">
+    <li><a href="/ctbb/"><img src="tpl/default/img/logo.png"></a></li>
+    <li class="label">Geoportal</li>
+    <li class="info"><a class="btn" href="#">i</a>
+</ul>
+
+<table class="mapas">
+	<tr>
+		<td><a href="index_guia.php"><img src="static/map1.png"/><br/>Guia urbana</a></td>
+		<td><a href="index.php"><img src="static/map2.png"/><br/>Planejament</a></td>
+	</tr>
+	<tr>
+		<td><a href="index_activitats.php?map=Activitats"><img src="static/map3.png"/><br/>Activitats</a></td>
+		<td><!--<a href="index.php?map=Ortofotos históriques"><img src="static/map2.png"/><br/>Ortofotos históriques</a>--></td>
+	</tr>
+	<tr>
+		<td colspan="2" class="req">Optimitzat per Firefox i Google Chrome, resolució de pantalla mínima 1387*856 píxels</td>
+	</tr>
+</table>
+
+<script src="http://code.jquery.com/jquery-2.2.4.min.js"
+                integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44="
+                crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+<script>
+	jQuery(document).ready(function($) {
+		var num = Math.round( Math.random() * 8 );
+		$("body").css("background", "url(static/bg" + num + ".jpg)");
+
+	    $( "#credits" ).dialog({
+			modal: true,
+			autoOpen: false,
+			buttons: {
+				Ok: function() {
+				  $( this ).dialog( "close" );
+				}
+			}
+	    });
+
+		$("a.btn").click(function() {
+			$( "#credits" ).dialog( "open" );
+		});
+	});
+</script>
+
+</body>
+</html>
