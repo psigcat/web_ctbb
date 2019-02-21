@@ -35,7 +35,8 @@
             <div class="window main">
                 <div class="content">
                     <ul id="menu" class="list-unstyled list-inline">
-                        <li><a href="<?php echo $baseHref?>"><img src="tpl/default/img/logo.png" class="hidden-xs" /></a></li>
+                        <li><a href="<?php echo $baseHref?>"><i class="fa fa-arrow-circle-left fa-2x" aria-hidden="true"></i></a></li>
+                        <li><a href="<?php echo $baseHref?>"><img src="tpl/default/img/logo.png" class="hidden-xs logo" /></a></li>
                         <li><div class="vertical-line"></div></li>
 
                         <li><a href="#" class="layers"><img src="tpl/default/img/menuLayers.png" /></a></li>

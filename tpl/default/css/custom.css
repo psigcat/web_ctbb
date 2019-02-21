@@ -301,8 +301,14 @@ div.table-list ul li.shoe .custom-badge {
 .window.main a {
   display: inline-block;
 }
+.window.main a i {
+  color: #fff;
+}
 .window.main a img {
   display: inline-block;
+}
+.window.main a img.logo {
+  width: 130px;
 }
 .window.main .vertical-line {
   display: inline-block;
