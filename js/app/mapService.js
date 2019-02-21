@@ -111,7 +111,7 @@ function map_service($http,$rootScope){
 	                        title: 'Topogràfic (by ICGC)',
 	                        qgistitle: '@ Capes topografiques - gris',
 	                        type: 'base',
-	                        visible: true,
+	                        visible: mapid != "poum",
 	                        source: new ol.source.TileWMS({
 								url: 'http://geoserveis.icc.cat/icc_mapesmultibase/utm/wms/service?',
 					            params: {'LAYERS': 'topogris', 'VERSION': '1.1.1'}
@@ -190,7 +190,8 @@ function map_service($http,$rootScope){
 		        layerSwitcher.showPanel();
 
 		        map.addControl(new ol.control.olLayerControl({
-		        	baseLayers: baseLayers
+		        	baseLayers: baseLayers,
+		        	mapid: mapid
 		        }));
 
 		        map.addControl(new ol.control.olOpacityControl({

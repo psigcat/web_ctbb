@@ -8,11 +8,20 @@ ol.control.olLayerControl = function (opt_options) {
     var options = opt_options || {};
     this.extent_ = options.extent;
     this.baseLayers = options.baseLayers;
+    this.mapid = options.mapid;
 
     var this_ = this;
 
+    // cap selected for map poum
+    var activeFoto = "active ";
+    var activeCap = "";
+    if (this.mapid == "poum") {
+        activeFoto = "";
+        activeCap = "active ";
+    }
+
     var button1 = document.createElement('button');
-    button1.className = 'active btn-olLayer btn-olLayerMap btn btn-default';
+    button1.className = activeFoto+'btn-olLayer btn-olLayerMap btn btn-default';
     button1Text = document.createTextNode("Mapa");
     button1.appendChild(button1Text);
 
@@ -22,7 +31,7 @@ ol.control.olLayerControl = function (opt_options) {
     button2.appendChild(button2Text);
 
     var button3 = document.createElement('button');
-    button3.className = 'btn-olLayer btn-olLayerCap btn btn-default';
+    button3.className = activeCap+'btn-olLayer btn-olLayerCap btn btn-default';
     button3Text = document.createTextNode("Cap");
     button3.appendChild(button3Text);
 
