@@ -623,10 +623,16 @@ function map_service($http,$rootScope){
 	}
 
 	function getHtmlP(label, content) {
-		if (content != 'NULL' && content != '')
+		if (content != 'NULL' && content != '') {
+			if (label == "Àrea (m²)") {
+				content = Number(content.replace(',','')).toLocaleString('de-DE', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+			}
+			
 			return "<p>"+label+": "+content+"</p>";
-		else
+		}
+		else {
 			return "";
+		}
 	}
 
 	function getHtmlA(label, linktext, link) {
@@ -656,7 +662,7 @@ function map_service($http,$rootScope){
         // result: "BOX(409978.249378971 4587601.47112343,416985.690776374 4597348.5951092)"
 		if (x > 409978.249378971 && x < 416985.690776374 && y > 4587601.47112343 && y < 4597348.5951092) {
 
-			log("zoomToCoord:"+x+":"+y);
+			//log("zoomToCoord:"+x+":"+y);
 
 			// convert from EPSG:25831 to EPSG:3857
 			var coord = ol.proj.transform([x, y], ol.proj.get('EPSG:25831'), 'EPSG:3857');
@@ -721,7 +727,7 @@ function map_service($http,$rootScope){
 
 	function showIcon(coord) {
 
-		log("showIcon:"+coord[0]+":"+coord[1]);
+		//log("showIcon:"+coord[0]+":"+coord[1]);
 
 		if (iconLayer === null) {
 			iconPoint = new ol.geom.Point(coord);
@@ -826,6 +832,7 @@ function map_service($http,$rootScope){
 				className: "ol-bottom ol-left measureBar"
 			});
 		map.addControl ( mainBar );
+		$(".measureBar").attr("title", "Eina de mesurar, longitud i àrea");
 	}
 
 	/****************************************/
