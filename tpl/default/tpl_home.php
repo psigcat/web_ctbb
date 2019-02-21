@@ -108,80 +108,90 @@
                     <a href="#" class="pull-right"><i class="fa fa-fw fa-times"></i></a>
                 </h2>
                 <div class="content">
-                    <h3>Cerca per carrer</h3>
-                    <p>
-                        <label for="searchCarrer">Carrer</label>
-                        <input type="text" id="searchCarrer" name="searchCarrer" />
-                    </p>
-                    <p>
-                        <label for="searchNumero">Número</label>
-                        <select id="searchNumero" name="searchNumero">
-                            <option value="-1"> - Escrigui un carrer - </option>
-                        </select>
-                    </p>
+                    <h3 class="hover">Cerca per carrer</h3>
+                    <div class="slide active">
+                        <p>
+                            <label for="searchCarrer">Carrer</label>
+                            <input type="text" id="searchCarrer" name="searchCarrer" />
+                        </p>
+                        <p>
+                            <label for="searchNumero">Número</label>
+                            <select id="searchNumero" name="searchNumero">
+                                <option value="-1"> - Escrigui un carrer - </option>
+                            </select>
+                        </p>
+                    </div>
 
-                    <h3>Cerca per referència cadastral</h3>
-                    <p>Introduïu la referència cadastral i premeu el botó Buscar parcel·la (Ex 5123501DF1952S)</p>
-                    <p>
-                        <label for="searchReferencia">Referencia</label>
-                        <input type="text" id="searchReferencia" name="searchReferencia" />
-                    </p>
-                    <p>
-                        <button type="button" class="btn btn-default" ng-click="searchCatasterRef()">Buscar parcel·la</button>
-                    </p>
+                    <h3 class="hover">Cerca per referència cadastral</h3>
+                    <div class="slide">
+                        <p>Introduïu la referència cadastral i premeu el botó Buscar parcel·la (Ex 5123501DF1952S)</p>
+                        <p>
+                            <label for="searchReferencia">Referencia</label>
+                            <input type="text" id="searchReferencia" name="searchReferencia" />
+                        </p>
+                        <p>
+                            <button type="button" class="btn btn-default" ng-click="searchCatasterRef()">Buscar parcel·la</button>
+                        </p>
+                    </div>
 
-                    <h3>Cerca al cadastre de rústica</h3>
-                    <p>
-                        <label for="searchPoligon">Polígon</label>
-                        <select id="searchPoligon" name="searchPoligon">
-                            <option value="-1">-  Triï una opció  -</option>
-                        </select>
-                    </p>
-                    <p>
-                        <label for="searchParcela">Parcel·la</label>
-                        <select id="searchParcela" name="searchParcela">
-                            <option value="-1">-  Triï una opció  -</option>
-                        </select>
-                    </p>
+                    <h3 class="hover">Cerca al cadastre de rústica</h3>
+                    <div class="slide">
+                        <p>
+                            <label for="searchPoligon">Polígon</label>
+                            <select id="searchPoligon" name="searchPoligon">
+                                <option value="-1">-  Triï una opció  -</option>
+                            </select>
+                        </p>
+                        <p>
+                            <label for="searchParcela">Parcel·la</label>
+                            <select id="searchParcela" name="searchParcela">
+                                <option value="-1">-  Triï una opció  -</option>
+                            </select>
+                        </p>
+                    </div>
 
-                    <h3>Cerca per coordenades</h3>
-                    <p>Coordenades en "ETRS89 UTM fus 31"<br />
-                    (Ex X=415078.5 Y=4592145.9)</p>
+                    <h3 class="hover">Cerca per coordenades</h3>
+                    <div class="slide">
+                        <p>Coordenades en "ETRS89 UTM fus 31"<br />
+                        (Ex X=415078.5 Y=4592145.9)</p>
 
-                    <p>
-                        <label for="searchX">X</label>
-                        <input type="text" id="searchX" name="searchX" />
-                    </p>
-                    <p>
-                        <label for="searchY">Y</label>
-                        <input type="text" id="searchY" name="searchY" />
-                    </p>
-                    <p>
-                        <button type="button" class="btn btn-default" ng-click="searchLoc()">Buscar localització</button>
-                    </p>
+                        <p>
+                            <label for="searchX">X</label>
+                            <input type="text" id="searchX" name="searchX" />
+                        </p>
+                        <p>
+                            <label for="searchY">Y</label>
+                            <input type="text" id="searchY" name="searchY" />
+                        </p>
+                        <p>
+                            <button type="button" class="btn btn-default" ng-click="searchLoc()">Buscar localització</button>
+                        </p>
+                    </div>
 
-                    <h3>Cerca per equipaments</h3>
-                    <p>
-                        <label for="searchEquipTipus">Tipus</label>
-                        <select id="searchEquipTipus" name="searchEquipTipus">
-                            <option value="-1">-  Triï una opció  -</option>
-                            <option value="Administratiu">Administratiu</option>
-                            <option value="Cultural">Cultural</option>
-                            <option value="Educatiu">Educatiu</option>
-                            <option value="Esportiu">Esportiu</option>
-                            <option value="Funerari">Funerari</option>
-                            <option value="Juvenil">Juvenil</option>
-                            <option value="Mediambiental">Mediambiental</option>
-                            <option value="Sanitari">Sanitari</option>
-                            <option value="Social">Social</option>
-                        </select>
-                    </p>
-                    <p>
-                        <label for="searchEquip">Equipament</label>
-                        <select id="searchEquip" name="searchEquip">
-                            <option value="-1">-  Triï una opció  -</option>
-                        </select>
-                    </p>
+                    <h3 class="hover">Cerca per equipaments</h3>
+                    <div class="slide">
+                        <p>
+                            <label for="searchEquipTipus">Tipus</label>
+                            <select id="searchEquipTipus" name="searchEquipTipus">
+                                <option value="-1">-  Triï una opció  -</option>
+                                <option value="Administratiu">Administratiu</option>
+                                <option value="Cultural">Cultural</option>
+                                <option value="Educatiu">Educatiu</option>
+                                <option value="Esportiu">Esportiu</option>
+                                <option value="Funerari">Funerari</option>
+                                <option value="Juvenil">Juvenil</option>
+                                <option value="Mediambiental">Mediambiental</option>
+                                <option value="Sanitari">Sanitari</option>
+                                <option value="Social">Social</option>
+                            </select>
+                        </p>
+                        <p>
+                            <label for="searchEquip">Equipament</label>
+                            <select id="searchEquip" name="searchEquip">
+                                <option value="-1">-  Triï una opció  -</option>
+                            </select>
+                        </p>
+                    </div>
 
                     <p>
                         <input type="radio" name="searchinfo" id="searchradio1" value="info" ng-checked="true">
@@ -437,6 +447,14 @@
                 $("#infoPanel").on("click", "a.pull-right", function(){
                     $(".window.infoPanelLinks").hide();
                     return false;
+                });
+
+                // hide search panels
+                $(".window.search h3").click(function() {
+                    if (!$(this).hasClass("active")) {
+                        $(".slide").removeClass("active").slideUp(1000);
+                        $(this).next().addClass("active").slideDown(1000);
+                    }
                 });
             });
         </script>

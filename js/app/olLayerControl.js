@@ -51,7 +51,6 @@ ol.control.olLayerControl = function (opt_options) {
         e.preventDefault();
 
         this_.baseLayers.forEach(function(layer, i) {
-            console.log(layer.get("name"));
             layer.setVisible(layer.get("name") == "baseLayerTopo");
             layer.setOpacity($("#opacitySlider").slider("value")/100);
         });

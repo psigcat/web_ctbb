@@ -740,6 +740,18 @@ li.layer i {
   border: none;
 }
 
+.hover {
+  cursor: pointer;
+}
+
+.slide {
+  display: none;
+}
+
+.slide.active {
+  display: block;
+}
+
 @keyframes spinner {
   to {transform: rotate(360deg);}
 }

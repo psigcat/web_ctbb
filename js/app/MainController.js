@@ -210,7 +210,7 @@ Controller.$inject = [
 
 			//show window
 			$scope.infoPanel = true;
-			$("#infoPanel").show();
+			//$("#infoPanel").show();
 	    });
 
 		//****************************************************************

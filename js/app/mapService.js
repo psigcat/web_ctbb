@@ -109,6 +109,7 @@ function map_service($http,$rootScope){
 		baseLayerTopo = new ol.layer.Tile({
 							name: 'baseLayerTopo',
 	                        title: 'Topogràfic (by ICGC)',
+	                        qgistitle: '@ Capes topografiques - gris',
 	                        type: 'base',
 	                        visible: true,
 	                        source: new ol.source.TileWMS({
@@ -122,6 +123,7 @@ function map_service($http,$rootScope){
 		baseLayerFoto = new ol.layer.Tile({
 							name: 'baseLayerFoto',
 	                        title: 'Ortofoto (by ICGC)',
+	                        qgistitle: '@ Capes ortofotografiques',
 	                        type: 'base',
 	                        visible: false,
 	                        source: new ol.source.TileWMS({
@@ -340,6 +342,7 @@ function map_service($http,$rootScope){
             var newLayer = 
             	new ol.layer.Tile({
             		title: layer.name,
+            		type: layer.type,
 					source: layerSource,
 					showlegend: layer.showlegend,
                     visible: layer.visible,
@@ -559,8 +562,7 @@ function map_service($http,$rootScope){
 													// for testing only: link to full info
 												    //html += '<a target="_blank" href="' + url + '">.</a>';
 
-													$('#infoPanel .content').append(html);
-													//$("#infoPanel").show();
+												    $('#infoPanel .content').append(html);
 												}
 											}
 										});
@@ -599,8 +601,10 @@ function map_service($http,$rootScope){
 					//html += "<p><a target='_blank' href='https://www1.sedecatastro.gob.es/CYCBienInmueble/SECListaBienes.aspx?del=8&muni=240&rc1="+data.message.pcat1+"&rc2="+data.message.pcat2+"'>"+data.message.refcat+"</a></p>";
 					html += "<p><a target='_blank' href='https://www1.sedecatastro.gob.es/CYCBienInmueble/OVCListaBienes.aspx?del=8&muni=240&rc1="+data.message.pcat1+"&rc2="+data.message.pcat2+"'>"+data.message.refcat+"</a></p>";
 
-					$('#infoPanel .content-catastro').append(html);
-				    $("#infoPanel").show();
+					if (iconLayer !== null) {
+						$('#infoPanel .content-catastro').append(html);
+					    $("#infoPanel").show();
+					}
 				}
 			})
 			.catch(function (error) {
@@ -729,7 +733,7 @@ function map_service($http,$rootScope){
 					]
 				}),
 				style: new ol.style.Style({
-			        image: new ol.style.Icon(/** @type {olx.style.IconOptions} */ ({
+			        image: new ol.style.Icon(({
 						anchor: [0.5, 0],
 						anchorOrigin: 'bottom-left',
 						color: [255,0,0,1],
@@ -738,6 +742,13 @@ function map_service($http,$rootScope){
 				})
 			});
 			map.addLayer(iconLayer);
+
+            // hide Icon when info panel is closed
+            $("#infoPanel").on("click", "a.pull-right", function(){
+            	map.removeLayer(iconLayer);
+            	iconLayer = null;
+                return false;
+            });
 		}
 		else {
 			iconPoint.setCoordinates(coord);
@@ -1125,21 +1136,27 @@ function map_service($http,$rootScope){
 		var visibleLayers = [];
 		Object.keys(renderedLayers).forEach(function(key){
 			if (renderedLayers[key].getVisible()) {
-				if (key !== "@ Mapa de situació") {
+				if (key !== "@ Mapa de situació" &&
+					key !== "@ Capes topografiques - gris" &&
+					key !== "@ Capes ortofotografiques") {
+
 					visibleLayers.push(key);
 				}
 			}
-
-			/*baseLayers.forEach(function(layer, i) {
-	            if (layer.getVisible() && layer.get("title") !== "Cap fons") {
-	            	visibleLayers.push(layer.get("title"));
-	            }
-	        });*/
 		});
+
+		baseLayers.forEach(function(layer, i) {
+			if (layer.getVisible() && layer.get("title") !== "Cap fons") {
+            	//console.log(layer);
+            	//visibleLayers.push(layer.get("qgistitle"));
+				visibleLayers.splice(0, 0, layer.get("qgistitle"));
+            }
+        });
+		//console.log(visibleLayers.toString());
 
     	var url = urlWMSqgis+'?SERVICE=WMS&VERSION=1.3.0&REQUEST=GetPrint&FORMAT=pdf&TRANSPARENT=true&LAYERS='+visibleLayers.toString()+'&CRS=EPSG:3857&map0:STYLES=&map0:extent='+printSource.getExtent()+'&TEMPLATE='+printTemplate+'&DPI=120';
 
-		//console.log(visibleLayers.toString(), url);
+		console.log(url);
 
         window.open(url, mapname+" Castellbisbal");
 	}
