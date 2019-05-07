@@ -16,21 +16,16 @@ class ControllerIndex{
 		$data["skin"]		= $this->_system->get('skin');
 		$data['env']		= $this->_system->getEnviroment();
 		$data['token']		= session_id();		//token for cross site injection
-		$data['urlWMS']		= $this->_system->get('urlWMSqgis');
-		$data['urlWMSqgis']	= $this->_system->get('urlWMSqgis');
+		$data['urlWMS']		= $this->_system->get('urlWMSqgis_activitats');
+		$data['urlWMSqgis']	= $this->_system->get('urlWMSqgis_activitats');
 
 		$detect 			= new Mobile_Detect();
 		$data['isMobile'] 	= ($detect->isMobile() === true && $detect->isTablet() === false)? '1' : '0';
 
 		// set to POUM by default
-		$data['mapid'] = "poum";
-		$data['mapname'] = "Planejament urbanístic";
-		$data['title'] = "Planejament";
-		/*if (isset($_GET["mapid"]) && isset($_GET["mapname"])) {
-			// get map parameter
-			$data['mapid'] = $_GET["mapid"];
-			$data['mapname'] = $_GET["mapname"];
-		}*/
+		$data['mapid'] = "activitats";
+		$data['mapname'] = "Activitats";
+		$data['title'] = "Activitats";
 			
 		$this->_system->fShow($this->_system->get('skin')."/tpl_home_sinmapproxy.php",$data);
 		

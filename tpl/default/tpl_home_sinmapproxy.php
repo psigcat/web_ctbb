@@ -1,15 +1,19 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<title>POUM de Castellbisbal</title>
+		<title><?php echo $title; ?> de Castellbisbal</title>
 
-        <link rel="apple-touch-icon" sizes="180x180" href="http://mapa.psig.es/ssa/apple-touch-icon.png">
-        <link rel="icon" type="image/png" sizes="32x32" href="http://mapa.psig.es/ssa/favicon-32x32.png">
-        <link rel="icon" type="image/png" sizes="16x16" href="http://mapa.psig.es/ssa/favicon-16x16.png">
-        <link rel="manifest" href="http://mapa.psig.es/ssa/manifest.json">
-        <link rel="mask-icon" href="http://mapa.psig.es/ssa/safari-pinned-tab.svg" color="#5bbad5">
-        <link rel="shortcut icon" href="http://mapa.psig.es/ssa/favicon.ico">
-        <meta name="msapplication-config" content="http://mapa.psig.es/ssa/browserconfig.xml">
+        <link rel="shortcut icon" href="http://www.castellbisbal.cat/themes/castellbisbal/images/favicons/favicon.ico"> 
+        <link rel="apple-touch-icon" sizes="57x57" href="http://www.castellbisbal.cat/front/view/images/favicons/apple-touch-icon-57x57.png"> 
+        <link rel="apple-touch-icon" sizes="114x114" href="http://www.castellbisbal.cat/front/view/images/favicons/apple-touch-icon-114x114.png"> 
+        <link rel="apple-touch-icon" sizes="72x72" href="http://www.castellbisbal.cat/front/view/images/favicons/apple-touch-icon-72x72.png"> 
+        <link rel="apple-touch-icon" sizes="60x60" href="http://www.castellbisbal.cat/front/view/images/favicons/apple-touch-icon-60x60.png"> 
+        <link rel="apple-touch-icon" sizes="76x76" href="http://www.castellbisbal.cat/front/view/images/favicons/apple-touch-icon-76x76.png"> 
+        <link rel="icon" type="image/png" href="http://www.castellbisbal.cat/front/view/images/favicons/favicon-96x96.png" sizes="96x96"> 
+        <link rel="icon" type="image/png" href="http://www.castellbisbal.cat/themes/castellbisbal/images/favicons/favicon-16x16.png" sizes="16x16">
+        <link rel="icon" type="image/png" href="http://www.castellbisbal.cat/themes/castellbisbal/images/favicons/favicon-32x32.png" sizes="32x32"><meta name="msapplication-TileColor" content="#cee1ef"> 
+        <meta name="msapplication-config" content="http://www.castellbisbal.cat/front/view/images/favicons/browserconfig.xml">
+        
         <meta name="theme-color" content="#ffffff">
 
         <link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/openlayers/4.6.5/ol.css" type="text/css">
@@ -31,14 +35,15 @@
             <div class="window main">
                 <div class="content">
                     <ul id="menu" class="list-unstyled list-inline">
-                        <li><a href="<?php echo $baseHref?>"><img src="tpl/default/img/logo.png" class="hidden-xs" /></a></li>
+                        <li><a href="<?php echo $baseHref?>" title="Volver al Geoportal"><i class="fa fa-arrow-circle-left fa-2x" aria-hidden="true"></i></a></li>
+                        <li><a href="<?php echo $baseHref?>"><img src="tpl/default/img/logo.png" class="hidden-xs logo" /></a></li>
                         <li><div class="vertical-line"></div></li>
 
-                        <li><a href="#" class="layers"><img src="tpl/default/img/menuLayers.png" /></a></li>
-                        <li><a href="#" class="search"><img src="tpl/default/img/menuSearch.png" /></a></li>
-                        <li><a href="#" class="print"><img src="tpl/default/img/menuPrint.png" /></a></li>
-                        <?php if ($mapid == 'poum') : ?>
-                            <li><a href="#" class="reports"><img src="tpl/default/img/menuDoc.png" /></a></li>
+                        <li><a href="#" class="layers" title="Gestor de capes"><img src="tpl/default/img/menuLayers.png" /></a></li>
+                        <li><a href="#" class="search" title="Cercadors"><img src="tpl/default/img/menuSearch.png" /></a></li>
+                        <li><a href="#" class="print" title="Impressions"><img src="tpl/default/img/menuPrint.png" /></a></li>
+                        <?php if ($mapid == "poum") : ?>
+                            <li><a href="#" class="reports" title="Informació Adicional"><img src="tpl/default/img/menuDoc.png" /></a></li>
                         <?php endif; ?>
                     </ul>
             
@@ -67,10 +72,10 @@
 	                INFO
 	                <a href="#" class="pull-right"><i class="fa fa-fw fa-times"></i></a>
 	            </h2>
-                <div class="content">
-                </div>
-                <div class="content-catastro">  
-                </div>                 
+                <div class="content"></div>
+                <div id="loading"></div>
+                <div class="content-coord"></div>                 
+                <div class="content-catastro"></div>                 
             </div>
             
             <div class="window left-side print">
@@ -82,14 +87,18 @@
                 <div class="content">
                     <h3>DIN A4</h3>
                     <ul>
-                        <li><a href="#" class="format a4_hor">horitzontal 1:500</a></li>
-                        <li><a href="#" class="format a4_ver">vertical 1:500</a></li>
+                        <li><a href="#" class="format a4_hor active" data-scale="500" data-size="[297,188]">horitzontal 1:500</a></li>
+                        <li><a href="#" class="format a4_ver" data-scale="500" data-size="[188,260]">vertical 1:500</a></li>
                     </ul>
                     <h3>DIN A3</h3>
                     <ul>
-                        <li><a href="#" class="format a3_hor">horitzontal 1:1.000</a></li>
-                        <li><a href="#" class="format a3_ver">vertical 1:1.000</a></li>
+                        <li><a href="#" class="format a3_hor" data-scale="1000" data-size="[420,277]">horitzontal 1:1.000</a></li>
+                        <li><a href="#" class="format a3_ver" data-scale="1000" data-size="[277,380]">vertical 1:1.000</a></li>
                     </ul>
+                    <p>
+                        <button type="button" class="btn btn-default btn-cancel">Cancel</button> 
+                        <button type="button" class="btn btn-default btn-print">Print</button>
+                    </p>
                 </div>
             </div>
             
@@ -100,56 +109,105 @@
                     <a href="#" class="pull-right"><i class="fa fa-fw fa-times"></i></a>
                 </h2>
                 <div class="content">
-                    <h3>Cerca per carrer</h3>
-                    <p>
-                        <label for="searchCarrer">Carrer</label>
-                        <input type="text" id="searchCarrer" name="searchCarrer" />
-                    </p>
-                    <p>
-                        <label for="searchNumero">Número</label>
-                        <select id="searchNumero" name="searchNumero">
-                            <option value="-1"> - Escrigui un carrer - </option>
-                        </select>
-                    </p>
+                    <h3 class="hover">Cerca per carrer</h3>
+                    <div class="slide active">
+                        <p>
+                            <label for="searchCarrer">Carrer</label>
+                            <input type="text" id="searchCarrer" name="searchCarrer" />
+                        </p>
+                        <p>
+                            <label for="searchNumero">Número</label>
+                            <select id="searchNumero" name="searchNumero">
+                                <option value="-1"> - Escrigui un carrer - </option>
+                            </select>
+                        </p>
+                    </div>
 
-                    <h3>Cerca per referència cadastral</h3>
-                    <p>Introduïu la referència cadastral i premeu el botó Buscar parcel·la (Ex 5123501DF1952S)</p>
-                    <p>
-                        <label for="searchReferencia">Referencia</label>
-                        <input type="text" id="searchReferencia" name="searchReferencia" />
-                    </p>
-                    <p>
-                        <button type="button" class="btn btn-default" ng-click="searchCatasterRef()">Buscar parcel·la</button>
-                    </p>
+                    <h3 class="hover">Cerca per referència cadastral</h3>
+                    <div class="slide">
+                        <p>Introduïu la referència cadastral i premeu el botó Buscar parcel·la (Ex 5123501DF1952S)</p>
+                        <p>
+                            <label for="searchReferencia">Referencia</label>
+                            <input type="text" id="searchReferencia" name="searchReferencia" />
+                        </p>
+                        <p>
+                            <button type="button" class="btn btn-default" ng-click="searchCatasterRef()">Buscar parcel·la</button>
+                        </p>
+                    </div>
 
-                    <h3>Cerca al cadastre de rústica</h3>
-                    <p>
-                        <label for="searchPoligon">Polígon</label>
-                        <select id="searchPoligon" name="searchPoligon">
-                            <option value="-1">-  Triï una opció  -</option>
-                        </select>
-                    </p>
-                    <p>
-                        <label for="searchParcela">Parcel·la</label>
-                        <select id="searchParcela" name="searchParcela">
-                            <option value="-1">-  Triï una opció  -</option>
-                        </select>
-                    </p>
+                    <h3 class="hover">Cerca al cadastre de rústica</h3>
+                    <div class="slide">
+                        <p>
+                            <label for="searchPoligon">Polígon</label>
+                            <select id="searchPoligon" name="searchPoligon">
+                                <option value="-1">-  Triï una opció  -</option>
+                            </select>
+                        </p>
+                        <p>
+                            <label for="searchParcela">Parcel·la</label>
+                            <select id="searchParcela" name="searchParcela">
+                                <option value="-1">-  Triï una opció  -</option>
+                            </select>
+                        </p>
+                    </div>
 
-                    <h3>Cerca per coordenades</h3>
-                    <p>Coordenades en "ETRS89 UTM fus 31"</p>
+                    <h3 class="hover">Cerca per coordenades</h3>
+                    <div class="slide">
+                        <p>Coordenades en "ETRS89 UTM fus 31"<br />
+                        (Ex X=415078.5 Y=4592145.9)</p>
 
-                    <p>
-                        <label for="searchX">X</label>
-                        <input type="text" id="searchX" name="searchX" />
-                    </p>
-                    <p>
-                        <label for="searchY">Y</label>
-                        <input type="text" id="searchY" name="searchY" />
-                    </p>
-                    <p>
-                        <button type="button" class="btn btn-default" ng-click="searchLoc()">Buscar localització</button>
-                    </p>
+                        <p>
+                            <label for="searchX">X</label>
+                            <input type="text" id="searchX" name="searchX" />
+                        </p>
+                        <p>
+                            <label for="searchY">Y</label>
+                            <input type="text" id="searchY" name="searchY" />
+                        </p>
+                        <p>
+                            <button type="button" class="btn btn-default" ng-click="searchLoc()">Buscar localització</button>
+                        </p>
+                    </div>
+
+                    <?php if ($mapid == 'guia'): ?>
+                    <h3 class="hover">Cerca per equipaments</h3>
+                    <div class="slide">
+                        <p>
+                            <label for="searchEquipTipus">Tipus</label>
+                            <select id="searchEquipTipus" name="searchEquipTipus">
+                                <option value="-1">-  Triï una opció  -</option>
+                                <option value="Administratiu">Administratiu</option>
+                                <option value="Cultural">Cultural</option>
+                                <option value="Educatiu">Educatiu</option>
+                                <option value="Esportiu">Esportiu</option>
+                                <option value="Funerari">Funerari</option>
+                                <option value="Juvenil">Juvenil</option>
+                                <option value="Mediambiental">Mediambiental</option>
+                                <option value="Sanitari">Sanitari</option>
+                                <option value="Social">Social</option>
+                            </select>
+                        </p>
+                        <p>
+                            <label for="searchEquip">Equipament</label>
+                            <select id="searchEquip" name="searchEquip">
+                                <option value="-1">-  Triï una opció  -</option>
+                            </select>
+                        </p>
+                    </div>
+                    <?php endif; ?>
+
+                    <?php if ($mapid == 'activitats'): ?>
+                    <h3 class="hover">Cerca per rao social</h3>
+                    <div class="slide">
+                        <p>
+                            <label for="searchEmpresa">Nom empresa</label>
+                            <input type="text" id="searchEmpresa" name="searchEmpresa" />
+                        </p>
+                        <p>
+                            <button type="button" class="btn btn-default" ng-click="searchEmpresa()">Buscar empresa</button>
+                        </p>
+                    </div>
+                    <?php endif; ?>
 
                     <p>
                         <input type="radio" name="searchinfo" id="searchradio1" value="info" ng-checked="true">
@@ -190,7 +248,8 @@
                 </h2>
                 <div class="content">
                     <div class="row">
-                        <iframe src="" width="100%" height="575px" frameborder="0"></iframe>
+                        <button type="button" class="btn btn-default btn-print">Print</button>
+                        <iframe src="" width="100%" height="575px" frameborder="0" id="printinfo" name="printinfo"></iframe>
                     </div>
                 </div>
             </div>
@@ -405,6 +464,14 @@
                     $(".window.infoPanelLinks").hide();
                     return false;
                 });
+
+                // hide search panels
+                $(".window.search h3").click(function() {
+                    if (!$(this).hasClass("active")) {
+                        $(".slide").removeClass("active").slideUp(1000);
+                        $(this).next().addClass("active").slideDown(1000);
+                    }
+                });
             });
         </script>
         
@@ -412,7 +479,7 @@
     	<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular.min.js"></script>
     	
     	<!-- Open layers -->
-        <script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/openlayers/4.6.5/ol-debug.js"></script>
+        <script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/openlayers/4.6.5/ol.js"></script>
         <script src="js/app/olLayerControl.js"></script>
         <script src="js/app/olOpacityControl.js"></script>
         <script src="js/libs/ol-ext.min.js"></script>

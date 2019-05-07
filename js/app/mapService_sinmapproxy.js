@@ -22,8 +22,6 @@ var urlWMS						= null;		//WMS service url
 var urlWMSqgis					= null;		//WMS service url qgis
 var highLightStyle				= null;		//ol.style for highlighted feature
 var currentZoomLevel			= 13;
-var mainLayer					= null;		//main layer, in this case dbwater_rend is a layer that contains layers
-var layers						= null;		//layers contained in mainLayer (dbwater_rend)
 var zoomTrigger					= null;		//zoom level for trigger active layer change
 var activeLayer 				= null;
 var iconLayer					= null;
@@ -38,6 +36,8 @@ var layerSwitcher;
 var mainBar, subBar, mainToggle, catastroLayer;
 var overlays, baseLayers, baseLayerMap, baseLayerFoto, baseLayerTopo, baseLayerNull;
 var mapid, mapname;
+var printSource, printLayer, translatePrintBox, 
+	printTemplate = "plantilla_DIN_A4_horitzontal (1:500)";
 
 // Measure
 var sketch;
@@ -105,56 +105,33 @@ function map_service($http,$rootScope){
 			resolutionsBG[z] = sizeBG / Math.pow(2, z);
 			matrixIdsBG[z] = "EPSG:4326:" + z;
 		}
-/*
-		baseLayerMap = new ol.layer.Tile({
-							name: 'baseLayerMap',
-	                        title: 'OpenStreetMap, estilo Positron (by Carto)',
-	                        type: 'base',
-	                        visible: true,
-	                        source: new ol.source.XYZ({
-	                        	url: 'http://{1-4}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png'
-	                        })
-	                    });
-*/
 
 		baseLayerTopo = new ol.layer.Tile({
 							name: 'baseLayerTopo',
-	                        title: 'Topogràfic 1:5.000 (by ICGC)',
+	                        title: 'Topogràfic (by ICGC)',
+	                        qgistitle: '@ Capes topografiques - gris',
 	                        type: 'base',
-	                        visible: true,
+	                        visible: mapid != "poum",
 	                        source: new ol.source.TileWMS({
-								//url: 'http://geoserveis.icgc.cat/icc_mapesbase/wms/service?',
-					            //params: {'LAYERS': 'mtc5m', 'VERSION': '1.1.1'}
-					            url: urlWMS,
-					            params: {'LAYERS': 'icgc_topo'},
-					            attributions: [
-						            'Institut Cartogràfic i Geològic de Catalunya CC-BY-SA-3'
-						        ],
+								url: 'http://geoserveis.icc.cat/icc_mapesmultibase/utm/wms/service?',
+					            params: {'LAYERS': 'topogris', 'VERSION': '1.1.1'}
+					            //url: urlWMS,
+					            //params: {'LAYERS': 'icgc_topo'},
 					        })
 	                    });
 
 		baseLayerFoto = new ol.layer.Tile({
 							name: 'baseLayerFoto',
 	                        title: 'Ortofoto (by ICGC)',
+	                        qgistitle: '@ Capes ortofotografiques',
 	                        type: 'base',
 	                        visible: false,
-	                        source: new ol.source.WMTS({
-								url: 'http://www.ign.es/wmts/pnoa-ma',
-				                layer: 'OI.OrthoimageCoverage',
-								matrixSet: 'EPSG:4326',
-								//matrixSet: 'EPSG:3857',
-								format: 'image/png',
-								projection: ol.proj.get('EPSG:4326'),
-								tileGrid: new ol.tilegrid.WMTS({
-								  origin: ol.extent.getTopLeft(projectionExtentBG),
-								  resolutions: resolutionsBG,
-								  matrixIds: matrixIdsBG
-								}),
-								style: 'default',
-					            attributions: [
-						            'Institut Cartogràfic i Geològic de Catalunya CC-BY-SA-3'
-						        ],
-						 	})
+	                        source: new ol.source.TileWMS({
+								url: 'http://geoserveis.icc.cat/icc_mapesmultibase/utm/wms/service?',
+					            params: {'LAYERS': 'orto', 'VERSION': '1.1.1'}
+					            //url: urlWMS,
+					            //params: {'LAYERS': 'icgc_orto'},
+					        })
 	                    });
 
 		baseLayerNull = new ol.layer.Tile({
@@ -165,16 +142,17 @@ function map_service($http,$rootScope){
 
 		baseLayers = [
 			baseLayerNull,
-			baseLayerFoto,
 			baseLayerTopo,
+			baseLayerFoto,
 			//baseLayerMap
 		];
 
 		$.when(
-            $.getJSON("js/data/"+mapid+".json", {})   
+            $.getJSON("js/data/"+mapid+".qgs.json", {})   
             .done (function( data ) {
 
             	overlays = data;
+            	//console.log(overlays);
 
             	var qgisLayers = [
 							new ol.layer.Group({
@@ -190,11 +168,13 @@ function map_service($http,$rootScope){
 				//map
 				map 				= new ol.Map({
 										target: 'map',
-										layers: qgisLayers
+										layers: qgisLayers,
+										controls: ol.control.defaults({attribution: false}),
 		        					});
 
 		        //map.addLayer(raster);
 		        map.setView(view);
+		        map.set("urlWMSqgis", urlWMSqgis);
 				viewProjection = view.getProjection();
 				viewResolution = view.getResolution();
 
@@ -210,7 +190,8 @@ function map_service($http,$rootScope){
 		        layerSwitcher.showPanel();
 
 		        map.addControl(new ol.control.olLayerControl({
-		        	baseLayers: baseLayers
+		        	baseLayers: baseLayers,
+		        	mapid: mapid
 		        }));
 
 		        map.addControl(new ol.control.olOpacityControl({
@@ -231,11 +212,13 @@ function map_service($http,$rootScope){
 
 		        /* events */
 				map.on('click', function(evt) {
-					$(".infoPanel").hide();
+					//$(".infoPanel").hide();
 					$(".infoPanelLinks").hide();
 					//log("click coordinates: ", evt.coordinate);
 
 					if (!measureActive) {
+						$("#infoPanel").show();
+						$('#loading').addClass('spinner');
 						selectFeatureInfo(evt.coordinate);
 						showIcon(evt.coordinate);
 					}
@@ -244,6 +227,51 @@ function map_service($http,$rootScope){
 				map.on('pointermove', function(evt) {
 					if (measureActive) {
 						pointerMoveHandler(evt);
+					}
+				});
+
+				// l'ull del temps
+				// get the pixel position with every move
+				var container = document.getElementById('map');
+				var mousePosition = null;
+
+				container.addEventListener('mousemove', function(event) {
+					if ($(".btn-olLayerUll").hasClass("active")) {
+						mousePosition = map.getEventPixel(event);
+						map.render();
+					}
+				});
+
+				container.addEventListener('mouseout', function() {
+					if ($(".btn-olLayerUll").hasClass("active")) {
+						mousePosition = null;
+						map.render();
+					}
+				});
+
+				// before rendering the layer, do some clipping
+				baseLayerFoto.on('precompose', function(event) {
+					if ($(".btn-olLayerUll").hasClass("active")) {
+						var ctx = event.context;
+						var pixelRatio = event.frameState.pixelRatio;
+						ctx.save();
+						ctx.beginPath();
+						if (mousePosition) {
+							// only show a circle around the mouse
+							ctx.arc(mousePosition[0] * pixelRatio, mousePosition[1] * pixelRatio, 100 * pixelRatio, 0, 2 * Math.PI);
+							ctx.lineWidth = 5 * pixelRatio;
+							ctx.strokeStyle = 'rgba(0,0,0,0.5)';
+							ctx.stroke();
+						}
+						ctx.clip();
+					}
+				});
+
+				// after rendering the layer, restore the canvas context
+				baseLayerFoto.on('postcompose', function(event) {
+					if ($(".btn-olLayerUll").hasClass("active")) {
+						var ctx = event.context;
+						ctx.restore();
 					}
 				});
 
@@ -257,13 +285,13 @@ function map_service($http,$rootScope){
 							color: 'rgba(255, 255, 255, 0.2)'
 						}),
 						stroke: new ol.style.Stroke({
-							color: '#ffcc33',
+							color: '#58267b',
 							width: 2
 						}),
 						image: new ol.style.Circle({
 							radius: 7,
 							fill: new ol.style.Fill({
-						  		color: '#ffcc33'
+						  		color: '#58267b'
 							})
 						})
 					})
@@ -272,7 +300,6 @@ function map_service($http,$rootScope){
 		        map.addLayer(measureLayer);
 
 				initMeasureBar();
-
 
             })
             .fail(function(data) {    
@@ -291,12 +318,7 @@ function map_service($http,$rootScope){
 		    	mainToggle.toggle();
 		    	measureSource.clear();
 			}
-		});
-
-		$( document ).ready(function() {
-			//layerSwitcher.showPanel();
-		});
-    	
+		});    	
 	}
 
 	function getLayerOverlays() {
@@ -321,8 +343,9 @@ function map_service($http,$rootScope){
             var newLayer = 
             	new ol.layer.Tile({
             		title: layer.name,
+            		type: layer.type,
 					source: layerSource,
-					//legend: layer.legend
+					showlegend: layer.showlegend,
                     visible: layer.visible,
 	                hidden: layer.hidden,
 	                children: layer.children,
@@ -342,7 +365,7 @@ function map_service($http,$rootScope){
 
 	function getCatastroOverlay() {
         catastroLayer = new ol.layer.Tile({
-            title: 'Cadastre',
+            title: 'Catastro',
             visible: false,
             source: new ol.source.TileWMS({
             	url: 'http://ovc.catastro.meh.es/Cartografia/WMS/ServidorWMS.aspx',
@@ -419,12 +442,13 @@ function map_service($http,$rootScope){
 
 	/* select feature info */
 	function selectFeatureInfo(coordinates){
-
 		//log("selectFeature()", coordinates);
 
 		//empty infoPanel
+		//$('#infoPanel').hide();
 		$('#infoPanel .content').empty();
 		$('#infoPanel .content-catastro').empty();
+		$('#infoPanel .content-coord').empty();
 		$('#infoPanelLinks iframe').attr("src", "");
 		
 		if(highLightSource){
@@ -432,6 +456,11 @@ function map_service($http,$rootScope){
 	    }
 
 	    //console.log(qgisSources, renderedLayers);
+
+	    // load feature info process, check if all loaded
+	    var itemsProcessed = 0;
+	    var itemsTotal = 0;
+	    var itemsResult = false;
 
 	    //Object.keys(renderedLayers).forEach(function(key){
 	    Object.keys(qgisSources).forEach(function(key){
@@ -447,7 +476,6 @@ function map_service($http,$rootScope){
 
 	    		// get sublayers instead of layers GetFeatureInfo
 	    		var sublayers = renderedLayers[key].get("children");
-
 	    		//console.log(key, renderedLayers[key], sublayers);
 
 	    		if (sublayers !== undefined) {
@@ -456,12 +484,12 @@ function map_service($http,$rootScope){
 	    			//console.log(sources);
 
 	    			sublayers.forEach(function(sublayer) {
-	    				infoLayers[sublayer.name] = sublayer;
+	    				infoLayers[sublayer.name] = sublayer["fields"];
 	    			});
 	    		}
 	    		else if (renderedLayers[key].get("indentifiable")) {
 	    			sources = [qgisSources[key]];
-	    			infoLayers[key] = renderedLayers[key]["values_"];
+	    			infoLayers[key] = renderedLayers[key].get("fields");
 				}
     			//console.log("infoLayers", infoLayers);
 
@@ -473,33 +501,44 @@ function map_service($http,$rootScope){
 						{
 							'INFO_FORMAT': 'text/xml', 
 							'FEATURE_COUNT': 100,
-							//'FI_LINE_TOLERANCE': 0,
-							//'FI_POINT_TOLERANCE': 0,
-							//'FI_POLYGON_TOLERANCE': 0,
+							'FI_LINE_TOLERANCE': 10,
+							'FI_POINT_TOLERANCE': 10,
+							'FI_POLYGON_TOLERANCE': 0,
 
 						}
 					);
 
 					if (url) {
-						log("url",url);
+						log("url", url);
+						itemsTotal++;
 
 						$http.get(url).then(function(response){
 
-						    if(response) {
+							if(response) {
+
 						    	var xmlDoc = $.parseXML(response.data), 
 									$xml = $(xmlDoc);
+
+								itemsProcessed++;
 								
 								$($xml.find('Layer')).each(function(){
+
 									if ($(this).children().length > 0) {
 										var layer = $(this);
 										var layerName = layer.attr('name');
+
+										//console.log(layerName);
 										
 										$(layer.find('Feature')).each(function(){
+
 											if ($(this).children().length > 0) {
+
+												itemsResult = true;
+
 												var feature = $(this);
 												var id = feature.find('Attribute[name="id"]').attr('value');
-												
-												//console.log(layerName, id);
+												if (id == undefined && layerName == "Activitats") 
+													id = feature.find('Attribute[name="id_activitat"]').attr('value');
 
 												if (layerName != undefined && id != undefined) {
 
@@ -507,33 +546,45 @@ function map_service($http,$rootScope){
 
 													var ruta = 'files/';
 
+													if (layerName.startsWith("@")) {
+														layerName = layerName.substring(2);
+													}
 													var html = "<h3>"+layerName+"</h3>";
 
 													var l = source.getParams()['LAYERS'];
-													//console.log(l, infoLayers[l], infoLayers[l]['fields']);
 
-													infoLayers[l]['fields'].forEach(function(field){
-														var value = feature.find('Attribute[name="'+field.name+'"]').attr('value');
+													if (infoLayers[l] != undefined) {
 
-														if (value.startsWith("../links/")) {
-															html += getHtmlA(field.name, "Veure fitxa", value);
-														}
-														else {
-															html += getHtmlP(field.name, value);
-														}
-													});
+														infoLayers[l].forEach(function(field){
+															var value = feature.find('Attribute[name="'+field.name+'"]').attr('value');
 
-													// for testing only: link to full info
-												    //html += '<a target="_blank" href="' + url + '">.</a>';
+															if (value.startsWith("../links/")) {
+																html += getHtmlA(field.name, "Veure fitxa", value);
+															}
+															else {
+																html += getHtmlP(field.name, value);
+															}
+														});
 
-													$("#infoPanel").show();
-													$('#infoPanel .content').append(html);
+														// for testing only: link to full info
+													    //html += '<a target="_blank" href="' + url + '">.</a>';
+
+													    $('#infoPanel .content').append(html);
+													}
 												}
 											}
 										});
 									}
 								});
 							}
+
+						    if(itemsProcessed === itemsTotal) {
+						    	$('#loading').removeClass('spinner');
+
+						    	if (!itemsResult) {
+									$('#infoPanel .content').append("<strong>No s'ha trobat cap informació</strong>");
+						    	}
+						    }
 						});
 					}
 				});
@@ -549,7 +600,7 @@ function map_service($http,$rootScope){
 
 			placesService.getCatasterRefFromCoord(coordinates[0],coordinates[1]).then(function(data) {
 
-				console.log(data.message);
+				//console.log(data.message);
 
 				if (data.message && data.message.refcat !== undefined) {
 					// show cadastre info
@@ -558,20 +609,37 @@ function map_service($http,$rootScope){
 					//html += "<p><a target='_blank' href='https://www1.sedecatastro.gob.es/CYCBienInmueble/SECListaBienes.aspx?del=8&muni=240&rc1="+data.message.pcat1+"&rc2="+data.message.pcat2+"'>"+data.message.refcat+"</a></p>";
 					html += "<p><a target='_blank' href='https://www1.sedecatastro.gob.es/CYCBienInmueble/OVCListaBienes.aspx?del=8&muni=240&rc1="+data.message.pcat1+"&rc2="+data.message.pcat2+"'>"+data.message.refcat+"</a></p>";
 
-					$('#infoPanel .content-catastro').append(html);
+					if (iconLayer !== null) {
+						$('#infoPanel .content-catastro').append(html);
+					    $("#infoPanel").show();
+					}
 				}
 			})
 			.catch(function (error) {
 			 	log("error in getCatasterRefFromPoligon: ", error);
 		    });
 		}
+
+	    var coordsTxt = "<h3>Coordenades identificades</h3>";
+	    var coords = ol.proj.transform([coordinates[0], coordinates[1]], 'EPSG:3857', ol.proj.get('EPSG:25831'));
+	    coordsTxt += "<p>X=" + coords[0].toFixed(1);
+	    coordsTxt += " Y=" + coords[1].toFixed(1);
+	    coordsTxt += "</p>";
+		$('#infoPanel .content-coord').append(coordsTxt);
+	    //$("#infoPanel").show();
 	}
 
 	function getHtmlP(label, content) {
-		if (content != 'NULL' && content != '')
+		if (content != 'NULL' && content != '') {
+			if (label == "Àrea (m²)") {
+				content = Number(content.replace(',','')).toLocaleString('de-DE', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+			}
+			
 			return "<p>"+label+": "+content+"</p>";
-		else
+		}
+		else {
 			return "";
+		}
 	}
 
 	function getHtmlA(label, linktext, link) {
@@ -601,7 +669,7 @@ function map_service($http,$rootScope){
         // result: "BOX(409978.249378971 4587601.47112343,416985.690776374 4597348.5951092)"
 		if (x > 409978.249378971 && x < 416985.690776374 && y > 4587601.47112343 && y < 4597348.5951092) {
 
-			log("zoomToCoord:"+x+":"+y);
+			//log("zoomToCoord:"+x+":"+y);
 
 			// convert from EPSG:25831 to EPSG:3857
 			var coord = ol.proj.transform([x, y], ol.proj.get('EPSG:25831'), 'EPSG:3857');
@@ -666,7 +734,7 @@ function map_service($http,$rootScope){
 
 	function showIcon(coord) {
 
-		log("showIcon:"+coord[0]+":"+coord[1]);
+		//log("showIcon:"+coord[0]+":"+coord[1]);
 
 		if (iconLayer === null) {
 			iconPoint = new ol.geom.Point(coord);
@@ -679,7 +747,7 @@ function map_service($http,$rootScope){
 					]
 				}),
 				style: new ol.style.Style({
-			        image: new ol.style.Icon(/** @type {olx.style.IconOptions} */ ({
+			        image: new ol.style.Icon(({
 						anchor: [0.5, 0],
 						anchorOrigin: 'bottom-left',
 						color: [255,0,0,1],
@@ -688,14 +756,22 @@ function map_service($http,$rootScope){
 				})
 			});
 			map.addLayer(iconLayer);
+
+            // hide Icon when info panel is closed
+            $("#infoPanel").on("click", "a.pull-right", function(){
+            	map.removeLayer(iconLayer);
+            	iconLayer = null;
+                return false;
+            });
 		}
 		else {
 			iconPoint.setCoordinates(coord);
 		}
 	}
 
-	function setVisibleLayer(layerName, visible) {
-		//log("setVisibleLayer "+layerName+" ["+visible+"]");
+	function setVisibleLayer(layerName, visible=true) {
+		log("setVisibleLayer "+layerName+" ["+visible+"]");
+		//console.log(renderedLayers);
 		renderedLayers[layerName].setVisible(visible);
 	}
 
@@ -706,7 +782,8 @@ function map_service($http,$rootScope){
 	
 	function setHighLightStyle(){
 		var _myStroke = new ol.style.Stroke({
-							color : 'rgba(108, 141, 168, 1)',
+							//color : 'rgba(108, 141, 168, 1)',
+							color: 'rgba(88, 38, 123, 1)',
 							width : 6 
 						});
 			
@@ -723,8 +800,8 @@ function map_service($http,$rootScope){
 				autoDeactivate: true,
 				controls:
 				[	new ol.control.Toggle(
-						{	//html:'<i class="fa fa-arrows-h"></i>', 
-							html: '<svg height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><g transform="translate(0 -8)"><path d="m1.5000001 20.5h21v7h-21z" style="overflow:visible;fill:#c7c7c7;fill-rule:evenodd;stroke:#5b5b5c;stroke-width:.99999994;stroke-linecap:square"/><path d="m4.5 21v3" fill="none" stroke="#5b5b5c"/><path d="m7.5 21v3" fill="none" stroke="#5b5b5c"/><path d="m10.5 20v6" fill="none" stroke="#5b5b5c"/><path d="m13.5 21v3" fill="none" stroke="#5b5b5c"/><path d="m16.5 21v3" fill="none" stroke="#5b5b5c"/><path d="m19.5 21v3" fill="none" stroke="#5b5b5c"/><path d="m2.5 13v4" fill="none" stroke="#415a75"/><path d="m21.5 13v4" fill="none" stroke="#415a75"/><path d="m2 15h20" fill="none" stroke="#415a75" stroke-width="1.99999988"/></g></svg>',
+						{	
+							html: '<svg height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><g transform="translate(0 -8)"><path d="m1.5000001 20.5h21v7h-21z" style="overflow:visible;fill:#c7c7c7;fill-rule:evenodd;stroke:#5b5b5c;stroke-width:.99999994;stroke-linecap:square"/><path d="m4.5 21v3" fill="none" stroke="#5b5b5c"/><path d="m7.5 21v3" fill="none" stroke="#5b5b5c"/><path d="m10.5 20v6" fill="none" stroke="#5b5b5c"/><path d="m13.5 21v3" fill="none" stroke="#5b5b5c"/><path d="m16.5 21v3" fill="none" stroke="#5b5b5c"/><path d="m19.5 21v3" fill="none" stroke="#5b5b5c"/><path d="m2.5 13v4" fill="none" stroke="#ffffff"/><path d="m21.5 13v4" fill="none" stroke="#ffffff"/><path d="m2 15h20" fill="none" stroke="#ffffff" stroke-width="1.99999988"/></g></svg>',
 							//autoActivate: true,
 							onToggle: function(b) { 
 								//console.log("Button 1 "+(b?"activated":"deactivated")); 
@@ -733,8 +810,8 @@ function map_service($http,$rootScope){
 							} 
 						}),
 					new ol.control.Toggle(
-						{	//html:'<i class="fa fa-arrows-alt"></i>', 
-							html: '<svg height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><g transform="translate(0 -8)"><path d="m1.5000001 20.5h21v7h-21z" style="overflow:visible;fill:#c7c7c7;fill-rule:evenodd;stroke:#5b5b5c;stroke-width:.99999994;stroke-linecap:square"/><path d="m4.5 21v3" fill="none" stroke="#5b5b5c"/><path d="m7.5 21v3" fill="none" stroke="#5b5b5c"/><path d="m10.5 20v6" fill="none" stroke="#5b5b5c"/><path d="m13.5 21v3" fill="none" stroke="#5b5b5c"/><path d="m16.5 21v3" fill="none" stroke="#5b5b5c"/><path d="m19.5 21v3" fill="none" stroke="#5b5b5c"/><path d="m2.5 9.5h5v2h14v7.5h-6.5v-5h-5v3.5h-7.5z" fill="#6d97c4" fill-rule="evenodd" stroke="#415a75"/></g></svg>',
+						{	
+							html: '<svg height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><g transform="translate(0 -8)"><path d="m1.5000001 20.5h21v7h-21z" style="overflow:visible;fill:#c7c7c7;fill-rule:evenodd;stroke:#5b5b5c;stroke-width:.99999994;stroke-linecap:square"/><path d="m4.5 21v3" fill="none" stroke="#5b5b5c"/><path d="m7.5 21v3" fill="none" stroke="#5b5b5c"/><path d="m10.5 20v6" fill="none" stroke="#5b5b5c"/><path d="m13.5 21v3" fill="none" stroke="#5b5b5c"/><path d="m16.5 21v3" fill="none" stroke="#5b5b5c"/><path d="m19.5 21v3" fill="none" stroke="#5b5b5c"/><path d="m2.5 9.5h5v2h14v7.5h-6.5v-5h-5v3.5h-7.5z" fill="#6d97c4" fill-rule="evenodd" stroke="#ffffff"/></g></svg>',
 							onToggle: function(b) { 
 								//console.log("Button 2 "+(b?"activated":"deactivated")); 
 								measureActive = b;
@@ -744,7 +821,8 @@ function map_service($http,$rootScope){
 				]
 			});
 		mainToggle = new ol.control.Toggle(
-						{	html: 'M',
+						{	
+							html: '<svg height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><g transform="translate(0 -8)"><path d="m1.5000001 20.5h21v7h-21z" style="overflow:visible;fill:#c7c7c7;fill-rule:evenodd;stroke:#5b5b5c;stroke-width:.99999994;stroke-linecap:square"/><path d="m4.5 21v3" fill="none" stroke="#5b5b5c"/><path d="m7.5 21v3" fill="none" stroke="#5b5b5c"/><path d="m10.5 20v6" fill="none" stroke="#5b5b5c"/><path d="m13.5 21v3" fill="none" stroke="#5b5b5c"/><path d="m16.5 21v3" fill="none" stroke="#5b5b5c"/><path d="m19.5 21v3" fill="none" stroke="#5b5b5c"/><path d="m2.5 13v4" fill="none" stroke="#ffffff"/><path d="m21.5 13v4" fill="none" stroke="#ffffff"/><path d="m2 15h20" fill="none" stroke="#ffffff" stroke-width="1.99999988"/></g></svg>',
 							bar: subBar,
 							onToggle: function(b) {
 								//console.log("main button "+(b?"activated":"deactivated"))
@@ -755,11 +833,15 @@ function map_service($http,$rootScope){
 							}
 						});
 		mainBar = new ol.control.Bar(
-			{	autoDeactivate: true,
+			{	
+				autoDeactivate: true,
 				controls: [mainToggle],
 				className: "ol-bottom ol-left measureBar"
 			});
 		map.addControl ( mainBar );
+		$(".measureBar").attr("title", "Eina de mesurar, longitud i àrea");
+		$(".measureBar div div div:first").attr("title", "Eina de mesurar, longitud");
+		$(".measureBar div div div:last").attr("title", "Eina de mesurar, àrea");
 	}
 
 	/****************************************/
@@ -940,9 +1022,170 @@ function map_service($http,$rootScope){
         return false;
     });*/
 
+    $(".infoPanelLinks .btn-print").on("click", function(){
+        window.frames['printinfo'].focus();
+		window.frames['printinfo'].print();
+    });
+
+	/****************************************/
+	// print
+	/****************************************/
+    $("#menu").on("click", ".reports", function(){
+        cancelPrintBox();
+    });
+    $("#menu").on("click", ".layers", function(){
+        cancelPrintBox();
+    });
+    $("#menu").on("click", ".search", function(){
+        cancelPrintBox();
+    });
+
+    $("#menu").on("click", ".print", function(){
+        cancelPrintBox();
+        initPrintBox();
+    });
+
+    $(".window.print").on("click", "h2 .fa-times", function(){
+        $(this).closest(".window").hide();
+        cancelPrintBox();
+    });
+
+    $(".window.print").on("click", ".btn-cancel", function(){
+        $(this).closest(".window").hide();
+        cancelPrintBox();
+    });
+
+    $(".window.print").on("click", ".btn-print", function(){
+        printPrint();
+    });
+
+	// actual screen scale
+	// https://gis.stackexchange.com/questions/242424/how-to-get-map-units-to-find-current-scale-in-openlayers
+	function screenScale() {
+		var unit = map.getView().getProjection().getUnits();
+		var resolution = map.getView().getResolution();
+		var inchesPerMetre = 39.3700787;
+		var dpi = 96;
+
+		return resolution * ol.proj.METERS_PER_UNIT[unit] * inchesPerMetre * dpi;
+	}
+
+	// print map resolution in m/px
+	// https://gis.stackexchange.com/questions/158435/how-to-get-current-scale-in-openlayers-3#answer-158518
+	function printResolution(scale) {
+		var unit = map.getView().getProjection().getUnits();
+		var inchesPerMetre = 39.3700787;
+		var dpi = 120;
+
+		return scale / (ol.proj.METERS_PER_UNIT[unit] * inchesPerMetre * dpi);
+	}
+
+	function initPrintBox() {
+
+		var size = $(".print .format.active").data("size");
+		var scale = Number($(".print .format.active").data("scale"));
+    	var w = Number(size[0])*printResolution(scale)/screenScale()*18000;
+    	var h = Number(size[1])*printResolution(scale)/screenScale()*18000;
+
+		var bounds = map.getView().calculateExtent([w,h]);
+		var printBox = [
+			[bounds[0], bounds[1]],
+			[bounds[0], bounds[3]],
+			[bounds[2], bounds[3]],
+			[bounds[2], bounds[1]],
+			[bounds[0], bounds[1]]
+		];
+		var printPolygon = new ol.geom.Polygon([printBox]);
+		var printFeature = new ol.Feature(printPolygon);
+
+		/*printFeature.on('change',function(){
+			console.log('Feature Moved To:' + this.getGeometry().getCoordinates());
+		},printFeature);*/
+
+   	    printSource = new ol.source.Vector({wrapX: false});
+		printSource.addFeature(printFeature);
+
+		printLayer = new ol.layer.Vector({
+			source: printSource,
+			zIndex: 1000,
+			style: new ol.style.Style({
+				fill: new ol.style.Fill({
+					color: 'rgba(88,38,123,0.3)' 
+				}),
+				stroke: new ol.style.Stroke({
+					color: 'rgb(88,38,123)',
+					width: 2
+				}),
+				image: new ol.style.Circle({
+					radius: 2,
+					fill: new ol.style.Fill({
+						color: 'rgb(88,38,123)' 
+					})
+				})
+			})
+		});
+		map.addLayer(printLayer);
+
+		// make box draggable
+		translatePrintBox = new ol.interaction.Translate({
+	        features: new ol.Collection([printFeature])
+	    });
+
+		printLayer.setVisible(true);
+		map.addInteraction(translatePrintBox);
+	}
+
+	function cancelPrintBox() {
+		if (printSource) {
+			map.removeInteraction(translatePrintBox);
+			printSource.clear();
+			printLayer.setVisible(false);
+		}
+	}
+
+	function printPrint() {
+		// print selected area
+		$(this).attr("target", "_blank");
+
+    	//var url = urlWMSqgis+'?SERVICE=WMS&VERSION=1.3.0&REQUEST=GetPrint&FORMAT=pdf&TRANSPARENT=true&LAYERS='+mapname+'&CRS=EPSG:3857&map0:STYLES=&map0:extent='+printSource.getExtent()+'&TEMPLATE='+printTemplate+'&DPI=120';
+
+		// get visible layers
+		var visibleLayers = [];
+		Object.keys(renderedLayers).forEach(function(key){
+			if (renderedLayers[key].getVisible()) {
+				if (key !== "@ Capes topografiques - gris" &&
+					key !== "@ Capes ortofotografiques" &&
+					key !== "Catastro") {
+
+					//console.log(key, renderedLayers[key].getVisible());
+					visibleLayers.push(key);
+				}
+				else if (key === "Catastro" && catastroLayer.getVisible()) {
+
+					//console.log(key, catastroLayer.getVisible());
+					visibleLayers.push("@ Catastro");
+				}
+			}
+		});
+
+		baseLayers.forEach(function(layer, i) {
+			if (layer.getVisible() && layer.get("title") !== "Cap fons") {
+            	//console.log(layer);
+            	//visibleLayers.push(layer.get("qgistitle"));
+				visibleLayers.splice(0, 0, layer.get("qgistitle"));
+            }
+        });
+		//console.log(visibleLayers.toString());
+
+    	var url = urlWMSqgis+'?SERVICE=WMS&VERSION=1.3.0&REQUEST=GetPrint&FORMAT=pdf&TRANSPARENT=true&LAYERS='+visibleLayers.toString()+'&CRS=EPSG:3857&map0:STYLES=&map0:extent='+printSource.getExtent()+'&TEMPLATE='+printTemplate+'&DPI=120&map0:scale='+$(".print .format.active").data("scale");
+
+		console.log(url);
+
+        window.open(url, mapname+" Castellbisbal");
+	}
+
     $(".window.print").on("click", ".format", function(){
     	var clase = $(this).attr('class');
-    	var template = "";
 		var dims = {
 			a3_hor: [420, 277],
 			a3_ver: [277, 420],
@@ -951,45 +1194,50 @@ function map_service($http,$rootScope){
 		};
 		var dim = dims["a4_hor"];
 		var resolution = 120;
+		var scale = 500;
 
     	switch(clase) {
     		case "format a4_hor": 
-    			template = "plantilla_DIN_A4_horitzontal (1:500)"; 
+    			printTemplate = "plantilla_DIN_A4_horitzontal (1:500)"; 
     			dim = dims["a4_hor"];
+    			scale = 500;
     			break;
     		case "format a4_ver": 
-    			template = "plantilla_DIN_A4_vertical (1:500)"; 
+    			printTemplate = "plantilla_DIN_A4_vertical (1:500)"; 
     			dim = dims["a4_ver"];
+    			scale = 500;
     			break;
     		case "format a3_hor": 
-    			template = "plantilla_DIN_A3_horitzontal (1:1.000)"; 
+    			printTemplate = "plantilla_DIN_A3_horitzontal (1:1.000)"; 
     			dim = dims["a3_hor"];
+    			scale = 1000;
     			break;
     		case "format a3_ver": 
-    			template = "plantilla_DIN_A3_vertical (1:1.000)"; 
+    			printTemplate = "plantilla_DIN_A3_vertical (1:1.000)"; 
     			dim = dims["a3_ver"];
+    			scale = 1000;
     			break;
     	}
+    	$(".window.print a.format").removeClass("active");
+    	$(".window.print a."+clase.replace(/ /g, '.')).addClass("active");
 
-		var width = Math.round(dim[0] * resolution / 25.4);
-        var height = Math.round(dim[1] * resolution / 25.4);
-        //var size = /** @type {module:ol/size~Size} */ (map.getSize());
+		printSource.clear();
+    	initPrintBox();
 
-    	var extent = map.getView().calculateExtent([width, height]);
-    	var url = urlWMSqgis+'?SERVICE=WMS&VERSION=1.3.0&REQUEST=GetPrint&FORMAT=pdf&TRANSPARENT=true&LAYERS='+mapname+'&CRS=EPSG:3857&map0:STYLES=&map0:extent='+extent+'&TEMPLATE='+template+'&DPI=120';
-		$(this).attr("target", "_blank");
-        window.open(url);
         return false;
     });
 
-    // public API	
+	/****************************************/
+	// public API
+	/****************************************/
 	var returnFactory 	= {
-					    		map				: map, // ol.Map
+					    		map				: map,
 								init			: init,
 								zoomToCoord		: zoomToCoord,
 								highlightPoligon: highlightPoligon,
 								resize			: resize,
-								setVisibleLayer	: setVisibleLayer						};
+								setVisibleLayer	: setVisibleLayer
+	};
 	return returnFactory;
 }
 })();
