@@ -90,6 +90,17 @@
 				return response.data;
     		});
 		}
+
+		//gets cataster by reference
+		dataFactory.getEmpresa	= function(nom){
+			var vars2send 			= {};
+			vars2send.nom			= nom;
+			vars2send.what			= "EMPRESA";
+			vars2send.token			= token;
+			return $http.post(baseHref+'ajax.places.php', vars2send).then(function(response){
+				return response.data;
+    		});
+		}
 		
 		return dataFactory;		
 	}])

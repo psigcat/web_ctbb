@@ -291,6 +291,7 @@ div.table-list ul li.shoe .custom-badge {
   left: 15px;
   line-height: 0;
   width: 355px;
+  overflow: hidden;
 }
 .window.main ul {
   margin: 0;
@@ -308,7 +309,7 @@ div.table-list ul li.shoe .custom-badge {
   display: inline-block;
 }
 .window.main a img.logo {
-  width: 130px;
+  width: 120px;
 }
 .window.main .vertical-line {
   display: inline-block;

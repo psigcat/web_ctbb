@@ -36,6 +36,10 @@ class ControllerIndex{
 				$tipus = (empty($_POST['tipus'])) ? 0 : $this->_system->nohacker($_POST['tipus']);
 				$equip = $places->getEquipament($tipus);
 				echo json_encode($equip);
+			}else if($what==="EMPRESA"){
+				$nom = (empty($_POST['nom'])) ? 0 : $this->_system->nohacker($_POST['nom']);
+				$empresa = $places->getEmpresa($nom);
+				echo json_encode($empresa);
 			}
 		}else{
 			echo json_encode(array("status"=>"Failed","message"=>"Cross site injection detected","code"=>501));

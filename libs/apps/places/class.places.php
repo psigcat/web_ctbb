@@ -109,6 +109,23 @@ class Places {
 		return array("status"=>"Accepted","message"=>$retorno,"code"=>200,"query"=>$query);
 	}
 
+	public function getEmpresa($nom){
+		$query		= "SELECT mom_empresa,ST_AsGeoJSON(ST_Transform(geom, 25831)) as geom FROM activitats.v_activitats_web WHERE mom_empresa like UPPER('%".$nom."%')";
+
+		$rs 		= $this->_system->pdo_select("bd1",$query);
+		$retorno	= array();
+		if(count($rs)>0){
+			foreach($rs as $row){
+				$item 	= array(
+					"nom"		=> $row['mom_empresa'],
+					"geom"		=> $row['geom'],
+				);
+				array_push($retorno, $item);
+			}
+		}
+		return array("status"=>"Accepted","message"=>$retorno,"code"=>200,"query"=>$query);
+	}
+
 	private function _pgConnect(){
 		// Connecting, selecting database
 		$dbconn = pg_connect("host=localhost dbname=".$this->_system->get('_database_bd1')." user=".$this->_system->get('_user_bd1')." password=".	$this->_system->get('_password_bd1')."") or die('Could not connect: ' . pg_last_error());

@@ -214,6 +214,7 @@ function map_service($http,$rootScope){
 				map.on('click', function(evt) {
 					//$(".infoPanel").hide();
 					$(".infoPanelLinks").hide();
+					if (parcelaLayer !== null) parcelaSource.clear();
 					//log("click coordinates: ", evt.coordinate);
 
 					if (!measureActive) {
@@ -343,6 +344,7 @@ function map_service($http,$rootScope){
             var newLayer = 
             	new ol.layer.Tile({
             		title: layer.name,
+            		mapproxy: layer.mapproxy,
             		type: layer.type,
 					source: layerSource,
 					showlegend: layer.showlegend,
@@ -365,7 +367,7 @@ function map_service($http,$rootScope){
 
 	function getCatastroOverlay() {
         catastroLayer = new ol.layer.Tile({
-            title: 'Cadastre',
+            title: 'Catastro',
             visible: false,
             source: new ol.source.TileWMS({
             	url: 'http://ovc.catastro.meh.es/Cartografia/WMS/ServidorWMS.aspx',
@@ -476,7 +478,6 @@ function map_service($http,$rootScope){
 
 	    		// get sublayers instead of layers GetFeatureInfo
 	    		var sublayers = renderedLayers[key].get("children");
-
 	    		//console.log(key, renderedLayers[key], sublayers);
 
 	    		if (sublayers !== undefined) {
@@ -485,12 +486,12 @@ function map_service($http,$rootScope){
 	    			//console.log(sources);
 
 	    			sublayers.forEach(function(sublayer) {
-	    				infoLayers[sublayer.name] = sublayer;
+	    				infoLayers[sublayer.name] = sublayer["fields"];
 	    			});
 	    		}
 	    		else if (renderedLayers[key].get("indentifiable")) {
 	    			sources = [qgisSources[key]];
-	    			infoLayers[key] = renderedLayers[key]["values_"];
+	    			infoLayers[key] = renderedLayers[key].get("fields");
 				}
     			//console.log("infoLayers", infoLayers);
 
@@ -516,12 +517,14 @@ function map_service($http,$rootScope){
 						$http.get(url).then(function(response){
 
 							if(response) {
+
 						    	var xmlDoc = $.parseXML(response.data), 
 									$xml = $(xmlDoc);
 
 								itemsProcessed++;
 								
 								$($xml.find('Layer')).each(function(){
+
 									if ($(this).children().length > 0) {
 										var layer = $(this);
 										var layerName = layer.attr('name');
@@ -529,14 +532,15 @@ function map_service($http,$rootScope){
 										//console.log(layerName);
 										
 										$(layer.find('Feature')).each(function(){
+
 											if ($(this).children().length > 0) {
 
 												itemsResult = true;
 
 												var feature = $(this);
 												var id = feature.find('Attribute[name="id"]').attr('value');
-												
-												//console.log(layerName, id);
+												if (id == undefined && layerName == "Activitats") 
+													id = feature.find('Attribute[name="id_activitat"]').attr('value');
 
 												if (layerName != undefined && id != undefined) {
 
@@ -544,26 +548,31 @@ function map_service($http,$rootScope){
 
 													var ruta = 'files/';
 
+													if (layerName.startsWith("@")) {
+														layerName = layerName.substring(2);
+													}
 													var html = "<h3>"+layerName+"</h3>";
 
 													var l = source.getParams()['LAYERS'];
-													//console.log(l, infoLayers[l], infoLayers[l]['fields']);
 
-													infoLayers[l]['fields'].forEach(function(field){
-														var value = feature.find('Attribute[name="'+field.name+'"]').attr('value');
+													if (infoLayers[l] != undefined) {
 
-														if (value.startsWith("../links/")) {
-															html += getHtmlA(field.name, "Veure fitxa", value);
-														}
-														else {
-															html += getHtmlP(field.name, value);
-														}
-													});
+														infoLayers[l].forEach(function(field){
+															var value = feature.find('Attribute[name="'+field.name+'"]').attr('value');
 
-													// for testing only: link to full info
-												    //html += '<a target="_blank" href="' + url + '">.</a>';
+															if (value.startsWith("../links/")) {
+																html += getHtmlA(field.name, "Veure fitxa", value);
+															}
+															else {
+																html += getHtmlP(field.name, value);
+															}
+														});
 
-												    $('#infoPanel .content').append(html);
+														// for testing only: link to full info
+													    //html += '<a target="_blank" href="' + url + '">.</a>';
+
+													    $('#infoPanel .content').append(html);
+													}
 												}
 											}
 										});
@@ -589,9 +598,9 @@ function map_service($http,$rootScope){
 			// add cataster reference
 			log("getCatasterRefFromCoord: "+coordinates[0]+":"+coordinates[1]);
 
-			coordinates = ol.proj.transform([coordinates[0], coordinates[1]], 'EPSG:3857', ol.proj.get('EPSG:25831'));
+			coords = ol.proj.transform([coordinates[0], coordinates[1]], 'EPSG:3857', ol.proj.get('EPSG:25831'));
 
-			placesService.getCatasterRefFromCoord(coordinates[0],coordinates[1]).then(function(data) {
+			placesService.getCatasterRefFromCoord(coords[0],coords[1]).then(function(data) {
 
 				//console.log(data.message);
 
@@ -684,6 +693,7 @@ function map_service($http,$rootScope){
 			// show feature info if radio selected
 			if ($('input[name=searchinfo]:checked').val() === "info") {
 				selectFeatureInfo(coord);
+				$("#infoPanel").show();
 			}
 		}
 		else {
@@ -754,6 +764,7 @@ function map_service($http,$rootScope){
             $("#infoPanel").on("click", "a.pull-right", function(){
             	map.removeLayer(iconLayer);
             	iconLayer = null;
+            	if (parcelaLayer !== null) parcelaSource.clear();
                 return false;
             });
 		}
@@ -833,6 +844,8 @@ function map_service($http,$rootScope){
 			});
 		map.addControl ( mainBar );
 		$(".measureBar").attr("title", "Eina de mesurar, longitud i àrea");
+		$(".measureBar div div div:first").attr("title", "Eina de mesurar, longitud");
+		$(".measureBar div div div:last").attr("title", "Eina de mesurar, àrea");
 	}
 
 	/****************************************/
@@ -1143,12 +1156,19 @@ function map_service($http,$rootScope){
 		// get visible layers
 		var visibleLayers = [];
 		Object.keys(renderedLayers).forEach(function(key){
+			
 			if (renderedLayers[key].getVisible()) {
-				if (key !== "@ Mapa de situació" &&
-					key !== "@ Capes topografiques - gris" &&
-					key !== "@ Capes ortofotografiques") {
+				if (key !== "@ Capes topografiques - gris" &&
+					key !== "@ Capes ortofotografiques" &&
+					key !== "@ Catastro") {
 
+					//console.log(key, renderedLayers[key].getVisible());
 					visibleLayers.push(key);
+				}
+				else if (key === "@ Catastro" && catastroLayer.getVisible()) {
+
+					//console.log(key, catastroLayer.getVisible());
+					visibleLayers.push("@ Catastro");
 				}
 			}
 		});
@@ -1162,7 +1182,7 @@ function map_service($http,$rootScope){
         });
 		//console.log(visibleLayers.toString());
 
-    	var url = urlWMSqgis+'?SERVICE=WMS&VERSION=1.3.0&REQUEST=GetPrint&FORMAT=pdf&TRANSPARENT=true&LAYERS='+visibleLayers.toString()+'&CRS=EPSG:3857&map0:STYLES=&map0:extent='+printSource.getExtent()+'&TEMPLATE='+printTemplate+'&DPI=120';
+    	var url = urlWMSqgis+'?SERVICE=WMS&VERSION=1.3.0&REQUEST=GetPrint&FORMAT=pdf&TRANSPARENT=true&LAYERS='+visibleLayers.toString()+'&CRS=EPSG:3857&map0:STYLES=&map0:extent='+printSource.getExtent()+'&TEMPLATE='+printTemplate+'&DPI=120&map0:scale='+$(".print .format.active").data("scale");
 
 		console.log(url);
 

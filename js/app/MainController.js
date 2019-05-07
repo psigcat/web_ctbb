@@ -37,7 +37,9 @@ Controller.$inject = [
 			version							= "1.0.0",
 
 			carrersNames = null,
-            carrersNamesArray = null;
+            carrersNamesArray = null,
+			empresas = null,
+			empresasArray = null;
 
 			//$('#info').hide();
 			$("#infoPanel").hide();
@@ -144,7 +146,6 @@ Controller.$inject = [
                 return false;
             });
 
-
 		    // search parcela selection
             $("#searchParcela").on("change", function() {
                 var x = Number(this.options[this.selectedIndex].getAttribute('data-x'));
@@ -196,6 +197,43 @@ Controller.$inject = [
                 return false;
 			});
 
+			// load empresas
+            $.when(
+                $.getJSON("js/data/empresas.json", {})   
+                .done (function( data ) {
+                    $scope.empresas = data;
+                    $scope.empresasArray = Object.keys(data);
+                })
+                .fail(function(data) {    
+                    console.log("json error in empresas.json");  
+                })
+            ).then(function() { 
+                //console.log("json file empresas.json loaded!");
+            });
+
+            // search carrer autocompletion
+            $("#searchEmpresa").autocomplete({
+                source: function( request, response ) {
+                    response( $.ui.autocomplete.filter(
+                        $scope.empresasArray, $scope.extractLast( request.term ) ) );
+                },
+                focus: function(event, ui) {
+                    $(this).val(ui.item.label);
+                    return false;
+                },
+                select: function(event, ui) {
+                    var coordinates = JSON.parse($scope.empresas[ui.item.label]);
+                    console.log("selected empresa", ui.item.label, coordinates);
+
+	                var x = Number(coordinates[0]);
+	                var y = Number(coordinates[1]);
+                    if ($scope.isNumeric(x) && $scope.isNumeric(y)) {
+						mapService.zoomToCoord(x,y);
+					}
+
+                    return false;      
+                }
+            });
 		}
 		
 		$scope.searchResultsContainer = window.document.querySelector('.window.search');
@@ -282,6 +320,36 @@ Controller.$inject = [
 				mapService.zoomToCoord(x,y);
 			}
 		};
+
+		/*
+		// search first result of empresa introduced in text field
+		$scope.searchEmpresa = function() {
+			var value = $("#searchEmpresa").val();
+            
+            if (value !== "") {
+				log("getRaoSocial: "+value);
+
+				placesService.getEmpresa(value).then(function(data) {
+					// get coords of company
+					console.log(data);
+
+					if (data.message.length > 0) {
+						// get first result
+						var geom = JSON.parse(data.message[0].geom);
+						var x = Number(geom.coordinates[0][0]);
+						var y = Number(geom.coordinates[0][1]);
+
+						if ($scope.isNumeric(x) && $scope.isNumeric(y)) {
+							mapService.zoomToCoord(x,y);
+							$("input#searchEmpresa").val(data.message[0].nom);
+						}
+					}
+				})
+				.catch(function (error) {
+				 	log("error in getEmpresa:", error);
+			    });
+			}
+		};*/
 
 		//****************************************************************
     	//***********************        REPORTS       *******************

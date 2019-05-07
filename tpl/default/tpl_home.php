@@ -169,6 +169,7 @@
                         </p>
                     </div>
 
+                    <?php if ($mapid == 'guia'): ?>
                     <h3 class="hover">Cerca per equipaments</h3>
                     <div class="slide">
                         <p>
@@ -193,6 +194,17 @@
                             </select>
                         </p>
                     </div>
+                    <?php endif; ?>
+
+                    <?php if ($mapid == 'activitats'): ?>
+                    <h3 class="hover">Cerca per rao social</h3>
+                    <div class="slide">
+                        <p>
+                            <label for="searchEmpresa">Nom empresa</label>
+                            <input type="text" id="searchEmpresa" name="searchEmpresa" />
+                        </p>
+                    </div>
+                    <?php endif; ?>
 
                     <p>
                         <input type="radio" name="searchinfo" id="searchradio1" value="info" ng-checked="true">
