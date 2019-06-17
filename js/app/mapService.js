@@ -22,6 +22,7 @@ var urlWMS						= null;		//WMS service url
 var urlWMSqgis					= null;		//WMS service url qgis
 var highLightStyle				= null;		//ol.style for highlighted feature
 var currentZoomLevel			= 13;
+var baseLayerTopoZoom			= 18;
 var zoomTrigger					= null;		//zoom level for trigger active layer change
 var activeLayer 				= null;
 var iconLayer					= null;
@@ -34,7 +35,7 @@ var qgisSources					= {};
 var qgisSublayerSources			= {};
 var layerSwitcher;
 var mainBar, subBar, mainToggle, catastroLayer;
-var overlays, baseLayers, baseLayerMap, baseLayerFoto, baseLayerTopo, baseLayerNull;
+var overlays, baseLayers, baseLayerMap, baseLayerFoto, baseLayerTopo, baseLayerTopoAMB, baseLayerNull;
 var mapid, mapname;
 var printSource, printLayer, translatePrintBox, 
 	printTemplate = "plantilla_DIN_A4_horitzontal (1:500)";
@@ -52,6 +53,13 @@ var draw;
 var measureSource;
 var measureActive = false;
 
+// Calculation of resolutions that match zoom levels 12-20
+// 156543.03392804097 = resolution at zoom level 0
+var resolutions = [];
+for (var i = 0; i <= 20; ++i) {
+  resolutions.push(156543.03392804097 / Math.pow(2, i));
+}
+
 map_service.$inject 	= [ 
     '$http',
     '$rootScope'
@@ -66,7 +74,6 @@ function map_service($http,$rootScope){
 			map.updateSize();
 		}
 	}
-	
 
 	function init(_urlWMS,_urlWMSqgis,_backgroundMap,_zoomTrigger,_placesService,_mapid,_mapname){
 		log("init("+_urlWMS+","+_urlWMSqgis+","+backgroundMap+","+_zoomTrigger+","+_mapid+","+_mapname+")");
@@ -111,14 +118,44 @@ function map_service($http,$rootScope){
 	                        title: 'Topogràfic (by ICGC)',
 	                        qgistitle: '@ Capes topografiques - gris',
 	                        type: 'base',
-	                        visible: mapid != "poum",
+	                        visible: mapid !== "poum",
+						    //minResolution: resolutions[baseLayerTopoZoom],
 	                        source: new ol.source.TileWMS({
 								url: 'http://geoserveis.icc.cat/icc_mapesmultibase/utm/wms/service?',
 					            params: {'LAYERS': 'topogris', 'VERSION': '1.1.1'}
-					            //url: urlWMS,
+								//url: urlWMS,
 					            //params: {'LAYERS': 'icgc_topo'},
 					        })
 	                    });
+
+	    baseLayerTopoAMB = new ol.layer.Tile({
+							name: 'baseLayerTopoAMB',
+	                        title: 'Topogràfic (by AMB)',
+	                        qgistitle: '@ Capes topografiques AMB',
+	                        type: 'base',
+	                        visible: false,
+						    //maxResolution: resolutions[baseLayerTopoZoom],
+					    	source: new ol.source.TileArcGISRest({
+				    			url: 'http://geoportal.amb.cat/geoserveis/rest/services/topografia_1000_3857/MapServer',
+				    			projection: 'EPSG:3857',
+					            params: {'LAYERS': 'Nivell 1M'}
+				    		})
+				    	});
+
+	    // proj4.defs("EPSG:25831","+proj=utm +zone=31 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs");
+	    /*baseLayerTopoAMB = new ol.layer.Tile({
+							name: 'baseLayerTopoAMB',
+	                        title: 'Topogràfic (by AMB)',
+	                        qgistitle: '@ Capes topografiques',
+	                        type: 'base',
+	                        visible: mapid != "poum",
+						    maxResolution: resolutions[18],
+					    	source: new ol.source.TileArcGISRest({
+				    			url: 'https://geoportal.amb.cat/arcgis/rest/services/Cartografia/MapaTopograficAMB1M_ETRS89/MapServer',
+				    			projection: 'EPSG:25831',
+					            params: {'LAYERS': 'Nivell 1k'}
+				    		})
+				    	});*/
 
 		baseLayerFoto = new ol.layer.Tile({
 							name: 'baseLayerFoto',
@@ -143,6 +180,7 @@ function map_service($http,$rootScope){
 		baseLayers = [
 			baseLayerNull,
 			baseLayerTopo,
+			baseLayerTopoAMB,
 			baseLayerFoto,
 			//baseLayerMap
 		];
@@ -228,6 +266,13 @@ function map_service($http,$rootScope){
 				map.on('pointermove', function(evt) {
 					if (measureActive) {
 						pointerMoveHandler(evt);
+					}
+				});
+
+				view.on('change:resolution', function(e) {
+					if ($(".btn-olLayerMap").hasClass("active")) {
+						baseLayerTopo.setVisible(view.getZoom() <= baseLayerTopoZoom);
+						baseLayerTopoAMB.setVisible(view.getZoom() > baseLayerTopoZoom);
 					}
 				});
 
@@ -1159,6 +1204,7 @@ function map_service($http,$rootScope){
 			
 			if (renderedLayers[key].getVisible()) {
 				if (key !== "@ Capes topografiques - gris" &&
+					key !== "@ Capes topografiques AMB" &&
 					key !== "@ Capes ortofotografiques" &&
 					key !== "@ Catastro") {
 

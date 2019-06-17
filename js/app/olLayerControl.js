@@ -60,7 +60,7 @@ ol.control.olLayerControl = function (opt_options) {
         e.preventDefault();
 
         this_.baseLayers.forEach(function(layer, i) {
-            layer.setVisible(layer.get("name") == "baseLayerTopo");
+            layer.setVisible(layer.get("name") == "baseLayerTopo" || layer.get("name") == "baseLayerTopoAMB");
             layer.setOpacity($("#opacitySlider").slider("value")/100);
         });
     };
