@@ -28,7 +28,7 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 		<meta charset="utf-8" />
 	</head>
-	<body>
+	<body class="<?php echo $mapid; ?>">
     	
         <div id="angularAppContainer" ng-app="app" ng-controller="mainController as mc" ng-init="initApp('<?php echo $baseHref; ?>','<?php echo $urlWMS; ?>','<?php echo $urlWMSqgis; ?>','<?php echo $env; ?>','<?php echo $token; ?>','<?php echo $isMobile; ?>', '<?php echo $mapid; ?>', '<?php echo $mapname; ?>')">
             
@@ -85,7 +85,7 @@
                     <a href="#" class="pull-right"><i class="fa fa-fw fa-times"></i></a>
                 </h2>
                 <div class="content">
-                    <h3>DIN A4</h3>
+                    <!--<h3>DIN A4</h3>
                     <ul>
                         <li><a href="#" class="format a4_hor active" data-scale="500" data-size="[297,188]">horitzontal 1:500</a></li>
                         <li><a href="#" class="format a4_ver" data-scale="500" data-size="[188,260]">vertical 1:500</a></li>
@@ -94,7 +94,22 @@
                     <ul>
                         <li><a href="#" class="format a3_hor" data-scale="1000" data-size="[420,277]">horitzontal 1:1.000</a></li>
                         <li><a href="#" class="format a3_ver" data-scale="1000" data-size="[277,380]">vertical 1:1.000</a></li>
-                    </ul>
+                    </ul>-->
+
+                    <p>Selecciona el paper i escala d'impressió</p>
+                    <p><select id="printSize" name="printSize">
+                        <option value="a4_hor" data-dim="[297,188]" selected="selected">DIN A4 Horitzontal</option>
+                        <option value="a4_ver" data-dim="[188,260]">DIN A4 Vertical</option>
+                    </select></p>
+                    <p><select id="printScale" name="printScale">
+                        <option value="200">1:200</option>
+                        <option value="500" selected="selected">1:500</option>
+                        <option value="2000">1:2.000</option>
+                        <option value="5000">1:5.000</option>
+                        <option value="10000">1:10.000</option>
+                        <option value="25000">1:25.000</option>
+                        <option value="50000">1:50.000</option>
+                    </select></p>
                     <p>
                         <button type="button" class="btn btn-default btn-cancel">Cancel</button> 
                         <button type="button" class="btn btn-default btn-print">Print</button>

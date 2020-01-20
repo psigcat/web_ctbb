@@ -257,10 +257,10 @@ var LayerSwitcher = function (_Control) {
         key: 'setVisible_',
         value: function setVisible_(map, lyr, visible) {
             lyr.setVisible(visible);
-            if (visible && lyr.get('type') === 'base') {
+            if (visible && (lyr.get('type') === 'base' || lyr.get('type') === 'orto')) {
                 // Hide all other base layers regardless of grouping
                 LayerSwitcher.forEachRecursive(map, function (l, idx, a) {
-                    if (l != lyr && l.get('type') === 'base') {
+                    if (l != lyr && ((lyr.get('type') === 'base' && l.get('type') === 'base') || (lyr.get('type') === 'orto' && l.get('type') === 'orto'))) {
                         l.setVisible(false);
                     }
                 });
@@ -294,6 +294,9 @@ var LayerSwitcher = function (_Control) {
                 if (lyr.get('hidden')) {
                     li.className += ' hidden';
                 }
+                if (!lyr.get('visible')) {
+                    li.className += ' hidden';
+                }
                 label.innerHTML = lyrTitle;
                 li.appendChild(label);
                 var ul = document.createElement('ul');
@@ -310,6 +313,9 @@ var LayerSwitcher = function (_Control) {
                 if (lyr.get('type') === 'base') {
                     input.type = 'radio';
                     input.name = 'base';
+                } else if (lyr.get('type') === 'orto') {
+                    input.type = 'radio';
+                    input.name = 'orto';
                 } else {
                     input.type = 'checkbox';
                 }
@@ -324,8 +330,10 @@ var LayerSwitcher = function (_Control) {
 
                 if (lyr.get('type') === 'base' || lyr.get('type') === 'personal') {
                     label.innerHTML = lyrTitle;
-                } else {
+                } else if (lyr.get('showlegend') !== false) {
                     label.innerHTML = lyrTitle + '<i class="fa fa-caret-down" aria-hidden="true"></i>';
+                } else {
+                    label.innerHTML = lyrTitle;
                 }
 
                 var rsl = map.getView().getResolution();
@@ -341,9 +349,14 @@ var LayerSwitcher = function (_Control) {
                             // show legend
                             var img = document.createElement('img');
                             img.className = 'legend';
+                            
+                            // dynamic from qgis server
                             //img.src = map.get("urlWMSqgis") + '?SERVICE=WMS&VERSION=1.3.0&REQUEST=GetLegendGraphic&LAYER='+sublayer.name+'&FORMAT=image/png&SLD_VERSION=1.1.0';
+                            
+                            // static from directory
                             img.src = "legend/"+sublayer.mapproxy+'.png';
                             //li.appendChild(document.createElement('br'));
+                            
                             li.appendChild(img);
                         }
                     });
@@ -356,7 +369,10 @@ var LayerSwitcher = function (_Control) {
                     if (lyr.get('title') === 'Catastro') {
                         img.src = 'http://ovc.catastro.meh.es/Cartografia/WMS/simbolos.png?SERVICE=WMS&VERSION=1.3.0&REQUEST=GetLegendGraphic&LAYER=Catastro&FORMAT=image/png&SLD_VERSION=1.1.0';
                     } else {
+                        // dynamic from qgis server
                         //img.src = map.get("urlWMSqgis") + '?SERVICE=WMS&VERSION=1.3.0&REQUEST=GetLegendGraphic&LAYER='+lyrTitle+'&FORMAT=image/png&SLD_VERSION=1.1.0';
+
+                        // static from directory
                         img.src = "legend/"+lyr.get('mapproxy')+'.png';
                     }
                     li.appendChild(document.createElement('br'));

@@ -545,7 +545,10 @@ div.table-list ul li.shoe .custom-badge {
 .spacer-20 {
   height: 20px;
 }
-/*for angular-js, hides content before is laoded*/
+#printSize, #printScale {
+  width: 300px;
+}
+/*for angular-js, hides content before is loaded*/
 [ng\:cloak],
 [ng-cloak],
 [data-ng-cloak],

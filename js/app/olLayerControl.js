@@ -35,18 +35,14 @@ ol.control.olLayerControl = function (opt_options) {
     button3Text = document.createTextNode("Cap");
     button3.appendChild(button3Text);
 
-    /*var button4 = document.createElement('button');
-    button4.className = 'btn-olLayer btn-olLayerUll btn btn-default';
-    button4Text = document.createTextNode("L'ull del temps");
-    button4.appendChild(button4Text);*/
-
     var btnGroup = document.createElement('div');
     btnGroup.className = 'btn-group';
     btnGroup.setAttribute('role', 'group');
     btnGroup.appendChild(button1);
     btnGroup.appendChild(button2);
-    btnGroup.appendChild(button3);
-    //btnGroup.appendChild(button4);
+    if (this.mapid !== "ortofotos_historial") {
+        btnGroup.appendChild(button3);
+    }
 
     var buttons = document.createElement('div');
     buttons.className = 'layerControl ol-unselectable';
@@ -90,19 +86,6 @@ ol.control.olLayerControl = function (opt_options) {
             layer.setOpacity($("#opacitySlider").slider("value")/100);
         });
     };
-
-    // L'Ull del temps
-    /*button4.onclick = function (e) {
-        e = e || window.event;
-        $(".layerControl .btn.active").removeClass("active");
-        $(this).addClass("active");
-        e.preventDefault();
-
-        this_.baseLayers.forEach(function(layer, i) {
-            layer.setVisible(layer.get("name") == "baseLayerTopo" || layer.get("name") == "baseLayerFoto");
-            layer.setOpacity($("#opacitySlider").slider("value")/100);
-        });
-    };*/
 
     ol.control.Control.call(this, {
         element: buttons,
