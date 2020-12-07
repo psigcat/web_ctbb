@@ -354,6 +354,19 @@ function map_service($http,$rootScope){
 		    	measureSource.clear();
 			}
 		});    	
+
+		// select print template
+		if (mapid === "ortofotos_historial") {
+			$("#printSize option[value='a4_hor']").css("display", "none");
+			$("#printSize option[value='a4_ver']").css("display", "none");
+			$("#printSize option[value='a4']").css("selected", true);
+			$("#printSize").val("a4");
+		}
+		else {
+			$("#printSize option[value='a4']").css("display", "none");
+			$("#printSize option[value='a4_hor']").css("selected", true);
+			$("#printSize").val("a4_hor");
+		}
 	}
 
 	function renderUll() {
@@ -375,9 +388,9 @@ function map_service($http,$rootScope){
 			if (mousePosition) {
 				// only show a circle around the mouse
 				ctx.arc(mousePosition[0] * pixelRatio, mousePosition[1] * pixelRatio, 200 * pixelRatio, 0, 2 * Math.PI);
-				//ctx.lineWidth = 0;
-				//ctx.strokeStyle = 'rgba(0,0,0,0.5)';
-				//ctx.stroke();
+				ctx.lineWidth = 1;
+				ctx.strokeStyle = 'rgba(0,0,0,0.5)';
+				ctx.stroke();
 			}
 			ctx.clip();
 		});
@@ -405,9 +418,14 @@ function map_service($http,$rootScope){
 
 	    	if (!external && !layer.external) {
 	    		// intern server (qgis or mapproxy)
-	    		url = urlWMS;
-	    		layer_name = layer.mapproxy;	// mapproxy
-	    		//layer_name = layer.name;	// qgis
+	    		if (layer.mapproxy) {
+		    		layer_name = layer.mapproxy;	// mapproxy
+		    		url = urlWMS;
+	    		}
+	    		else {
+		    		layer_name = layer.name;	// qgis
+		    		url = urlWMSqgis;
+	    		}
 	    		type = layer.type;
 	    		projection = 'EPSG:3857';
 	    		version = '1.3.0';
@@ -441,6 +459,7 @@ function map_service($http,$rootScope){
 	            var newLayer = 
 	            	new ol.layer.Tile({
 	            		title: layer.name,
+	            		qgisname: layer.qgisname,
 	            		mapproxy: layer.mapproxy,
 	            		type: type,
 						source: layerSource,
@@ -490,7 +509,7 @@ function map_service($http,$rootScope){
 		    		queryLayers = layer.name;
 		    	}
 
-		    	//console.log("group", layer.indentifiable, layer.name);
+		    	//console.log("group", layer.indentifiable, layer.name, urlWMSqgis);
             
 	            qgisSources[layer.name] = 
 
@@ -562,7 +581,6 @@ function map_service($http,$rootScope){
 	    var itemsTotal = 0;
 	    var itemsResult = false;
 
-	    //Object.keys(renderedLayers).forEach(function(key){
 	    Object.keys(qgisSources).forEach(function(key){
 
     		//console.log(key, renderedLayers[key].get("indentifiable"), renderedLayers[key].get("children"));
@@ -591,9 +609,11 @@ function map_service($http,$rootScope){
 	    			sources = [qgisSources[key]];
 	    			infoLayers[key] = renderedLayers[key].get("fields");
 				}
-    			//console.log("infoLayers", infoLayers);
+    			//console.log("infoLayers", sources, infoLayers);
 
 				sources.forEach(function(source, i) {
+
+					//console.log(i, coordinates, source.getUrls(), source.getParams(), source.getProperties());
 
 	    			// layer source
 		    		url = source.getGetFeatureInfoUrl(
@@ -1195,10 +1215,7 @@ function map_service($http,$rootScope){
 
 	function initPrintBox() {
 
-		//var size = $(".print .format.active").data("size");
-		//var scale = Number($(".print .format.active").data("scale"));
 		var size = $("#printSize option:selected").data("dim");
-		console.log(size);
 		var scale = $("#printScale").val(); 
     	var w = Number(size[0])*printResolution(scale)/screenScale()*18000;
     	var h = Number(size[1])*printResolution(scale)/screenScale()*18000;
@@ -1270,13 +1287,16 @@ function map_service($http,$rootScope){
 		Object.keys(renderedLayers).forEach(function(key){
 			
 			if (renderedLayers[key].getVisible()) {
+				//if ((key !== "@ Capes topografiques - gris" && mapid !== "ortofotos_historial") &&
 				if (key !== "@ Capes topografiques - gris" &&
 					key !== "@ Capes topografiques AMB" &&
 					key !== "@ Capes ortofotografiques" &&
 					key !== "@ Catastro") {
 
-					//console.log(key, renderedLayers[key].getVisible());
-					visibleLayers.push(key);
+					console.log(key, renderedLayers[key].getVisible(), renderedLayers[key].get("qgisname"));
+
+					//visibleLayers.push(key);
+					visibleLayers.push(renderedLayers[key].get("qgisname"));
 				}
 				else if (key === "@ Catastro" && catastroLayer.getVisible()) {
 
@@ -1288,8 +1308,7 @@ function map_service($http,$rootScope){
 
 		baseLayers.forEach(function(layer, i) {
 			if (layer.getVisible() && layer.get("title") !== "Cap fons") {
-            	//console.log(layer);
-            	//visibleLayers.push(layer.get("qgistitle"));
+            	//console.log(layer.get("qgistitle"));
 				visibleLayers.splice(0, 0, layer.get("qgistitle"));
             }
         });
@@ -1309,12 +1328,15 @@ function map_service($http,$rootScope){
 		var scale = parseInt($("#printScale").val());
 		var resolution = 120;
 
-		if (paper === "a4_hor" && scale === 500) {
+		if (paper === "a4") {
+			printTemplate = "plantilla_DIN_A4_horitzontal";
+		}
+		else if (paper === "a4_hor") {
 			printTemplate = "plantilla_DIN_A4_horitzontal (1:500)";
 		}
-		else if (paper === "a4_ver" && scale === 500) {
+		else if (paper === "a4_ver") {
 			printTemplate = "plantilla_DIN_A4_vertical (1:500)";
-		} 
+		}
 
 		console.log(paper, dim, scale, printTemplate);
 
