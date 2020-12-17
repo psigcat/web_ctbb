@@ -290,7 +290,7 @@ div.table-list ul li.shoe .custom-badge {
   top: 15px;
   left: 15px;
   line-height: 0;
-  width: 355px;
+  width: 380px;
   overflow: hidden;
 }
 .window.main ul {
@@ -332,7 +332,7 @@ div.table-list ul li.shoe .custom-badge {
 }
 .window.search, .window.print {
   display: none;
-  width: 355px;
+  width: 380px;
 }
 .window.search .ic, .window.print .ic {
   position: absolute;
@@ -364,7 +364,7 @@ div.table-list ul li.shoe .custom-badge {
 }
 .window.layers {
   display: none;
-  width: 355px;
+  width: 380px;
   color: #000;
 }
 .window.layers div.layers {
@@ -498,7 +498,7 @@ div.table-list ul li.shoe .custom-badge {
 }
 .window.reports {
   display: none;
-  width: 355px;
+  width: 380px;
 }
 .window.reports .ic {
   position: absolute;
@@ -546,7 +546,7 @@ div.table-list ul li.shoe .custom-badge {
   height: 20px;
 }
 #printSize, #printScale {
-  width: 300px;
+  width: 325px;
 }
 /*for angular-js, hides content before is loaded*/
 [ng\:cloak],
@@ -687,11 +687,11 @@ div.table-list ul li.shoe .custom-badge {
 img.legend {
   padding-left: 20px;
   display: none;
-  max-width: 300px;
+  max-width: 325px;
 }
 
 .layer-switcher li.layer {
-  width: 300px;
+  width: 325px;
 }
 
 .layer-switcher li.layer label {
@@ -780,4 +780,39 @@ li.layer i {
   border: 2px solid #ccc;
   border-top-color: #333;
   animation: spinner .6s linear infinite;
+}
+
+/* credits */
+#menu .info {
+  padding-top: 16px;
+  float: right;
+}
+
+#menu .info a.btn,
+button.ui-button {
+  border-radius: 10px;
+  background-color: #8867a0;
+  color: #fff;
+  padding: 8px 10px;
+  line-height: 15px;
+}
+
+#menu .info a.btn {
+  border-radius: 10px;
+  padding: 0 6px;
+  font-size: 12px;
+  font-weight: bold;
+}
+
+#credits {
+  display: none;
+}
+
+.ui-dialog .ui-dialog-titlebar-close {
+  padding: 0px;
+  line-height: 1rem;
+}
+
+.ui-dialog-titlebar-close::after {
+  content: 'x';
 }
