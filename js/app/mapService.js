@@ -681,6 +681,9 @@ function map_service($http,$rootScope){
 															if (value.startsWith("../links/")) {
 																html += getHtmlA(field.name, "Veure fitxa", value);
 															}
+															else if (value.startsWith("http")) {
+																html += getHtmlAblank(field.name, "Veure fitxa", value);
+															}
 															else {
 																html += getHtmlP(field.name, value);
 															}
@@ -779,6 +782,15 @@ function map_service($http,$rootScope){
 			html += "$('.infoLink').click(function(){ $('.infoPanelLinks').show(); setInfoPanelLinksWindowPosition(); $('.infoPanelLinks iframe').attr('src',$(this).data('href')); });";
 			html += "</script>";
 			return html;
+		}
+		else {
+			return "";
+		}
+	}
+
+	function getHtmlAblank(label, linktext, link) {
+		if (link && link != 'NULL') {
+			return "<p>"+label+": <a class='infoLink' target='_blank' href='"+link+"'>"+linktext+"</a></p>";
 		}
 		else {
 			return "";

@@ -234,6 +234,22 @@ Controller.$inject = [
                     return false;      
                 }
             });
+
+            // credits
+           	$( "#credits" ).dialog({
+				modal: true,
+				autoOpen: false,
+				buttons: {
+					Ok: function() {
+					  $( this ).dialog( "close" );
+					}
+				}
+		    });
+
+			$("a.btn").click(function() {
+				$( "#credits" ).show();
+				$( "#credits" ).dialog( "open" );
+			});
 		}
 		
 		$scope.searchResultsContainer = window.document.querySelector('.window.search');

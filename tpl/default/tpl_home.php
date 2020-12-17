@@ -29,6 +29,19 @@
 		<meta charset="utf-8" />
 	</head>
 	<body class="<?php echo $mapid; ?>">
+
+        <div id="credits" title="Crèdits">
+            <p>Aquest servidor de mapes mostra cartografia del servei de SIG de l'Ajuntament de Castellbisbal</p>
+            <p>Webmaster: <a href="http://psig.es/">PSIG</a></p>
+            <p>Fonts cartogràfic:
+                <ul>
+                    <li>Institut Cartogràfic i Geològic de Catalunya (ICGC)</li>
+                    <li>Àrea Metropolitana de Barcelona (AMB)</li>
+                    <li>Dirección General del Catastro</li>
+                </ul>
+            </p>
+            <p>Contacte amb nosaltres: <a href="mailto:servei.geoportal@castellbisbal.cat">servei.geoportal@castellbisbal.cat</a></p>
+        </div>
     	
         <div id="angularAppContainer" ng-app="app" ng-controller="mainController as mc" ng-init="initApp('<?php echo $baseHref; ?>','<?php echo $urlWMS; ?>','<?php echo $urlWMSqgis; ?>','<?php echo $env; ?>','<?php echo $token; ?>','<?php echo $isMobile; ?>', '<?php echo $mapid; ?>', '<?php echo $mapname; ?>')">
             
@@ -45,6 +58,7 @@
                         <?php if ($mapid == "poum") : ?>
                             <li><a href="#" class="reports" title="Informació Adicional"><img src="tpl/default/img/menuDoc.png" /></a></li>
                         <?php endif; ?>
+                        <li class="info"><a class="btn" href="#">i</a>
                     </ul>
             
                 </div>
@@ -85,20 +99,10 @@
                     <a href="#" class="pull-right"><i class="fa fa-fw fa-times"></i></a>
                 </h2>
                 <div class="content">
-                    <!--<h3>DIN A4</h3>
-                    <ul>
-                        <li><a href="#" class="format a4_hor active" data-scale="500" data-size="[297,188]">horitzontal 1:500</a></li>
-                        <li><a href="#" class="format a4_ver" data-scale="500" data-size="[188,260]">vertical 1:500</a></li>
-                    </ul>
-                    <h3>DIN A3</h3>
-                    <ul>
-                        <li><a href="#" class="format a3_hor" data-scale="1000" data-size="[420,277]">horitzontal 1:1.000</a></li>
-                        <li><a href="#" class="format a3_ver" data-scale="1000" data-size="[277,380]">vertical 1:1.000</a></li>
-                    </ul>-->
-
                     <p>Selecciona el paper i escala d'impressió</p>
                     <p><select id="printSize" name="printSize">
-                        <option value="a4_hor" data-dim="[297,188]" selected="selected">DIN A4 Horitzontal</option>
+                        <option value="a4" data-dim="[297,188]">DIN A4</option>
+                        <option value="a4_hor" data-dim="[297,188]">DIN A4 Horitzontal</option>
                         <option value="a4_ver" data-dim="[188,260]">DIN A4 Vertical</option>
                     </select></p>
                     <p><select id="printScale" name="printScale">
