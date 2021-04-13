@@ -1,7 +1,7 @@
 @font-face {
   font-family:custom;
   src:url(http://www.castellbisbal.cat/themes/castellbisbal/fonts/custom/regular.eot);
-  src:url(http://www.castellbisbal.cat/themes/castellbisbal/fonts/custom/regular.eot?#iefix) format("embedded-opentype"),url(http://www.castellbisbal.cat/themes/castellbisbal/fonts/custom/regular.woff) format("woff"),url(http://www.castellbisbal.cat/themes/castellbisbal/fonts/custom/regular.ttf) format("truetype"),url(http://www.castellbisbal.cat/themes/castellbisbal/fonts/custom/regular.svgz#IconicStrokeRegular) format("svg"),url(http://www.castellbisbal.cat/themes/castellbisbal/fonts/custom/regular.svg#IconicStrokeRegular) format("svg");
+  src:url(http://www.castellbisbal.cat/themes/castellbisbal/fonts/custom/regular.eot?#iefix) format("embedded-opentype"),url(http://www.castellbisbal.cat/themes/castellbisbal/fonts/custom/regular.svgz#IconicStrokeRegular) format("svg"),url(http://www.castellbisbal.cat/themes/castellbisbal/fonts/custom/regular.svg#IconicStrokeRegular) format("svg");
   font-weight:400;
   font-style:normal;
 }
@@ -9,7 +9,7 @@
 @font-face {
   font-family:custom;
   src:url(http://www.castellbisbal.cat/themes/castellbisbal/fonts/custom/regular-italic.eot);
-  src:url(http://www.castellbisbal.cat/themes/castellbisbal/fonts/custom/regular-italic.eot?#iefix) format("embedded-opentype"),url(http://www.castellbisbal.cat/themes/castellbisbal/fonts/custom/regular-italic.woff) format("woff"),url(http://www.castellbisbal.cat/themes/castellbisbal/fonts/custom/regular-italic.ttf) format("truetype"),url(http://www.castellbisbal.cat/themes/castellbisbal/fonts/custom/regular-italic.svgz#IconicStrokeRegular) format("svg"),url(http://www.castellbisbal.cat/themes/castellbisbal/fonts/custom/regular-italic.svg#IconicStrokeRegular) format("svg");
+  src:url(http://www.castellbisbal.cat/themes/castellbisbal/fonts/custom/regular-italic.eot?#iefix) format("embedded-opentype"),,url(http://www.castellbisbal.cat/themes/castellbisbal/fonts/custom/regular-italic.svgz#IconicStrokeRegular) format("svg"),url(http://www.castellbisbal.cat/themes/castellbisbal/fonts/custom/regular-italic.svg#IconicStrokeRegular) format("svg");
   font-weight:400;
   font-style:italic;
 }
@@ -17,7 +17,7 @@
 @font-face {
   font-family:custom;
   src:url(http://www.castellbisbal.cat/themes/castellbisbal/fonts/custom/bold-italic.eot);
-  src:url(http://www.castellbisbal.cat/themes/castellbisbal/fonts/custom/bold-italic.eot?#iefix) format("embedded-opentype"),url(http://www.castellbisbal.cat/themes/castellbisbal/fonts/custom/bold-italic.woff) format("woff"),url(http://www.castellbisbal.cat/themes/castellbisbal/fonts/custom/bold-italic.ttf) format("truetype"),url(http://www.castellbisbal.cat/themes/castellbisbal/fonts/custom/bold-italic.svgz#IconicStrokeRegular) format("svg"),url(http://www.castellbisbal.cat/themes/castellbisbal/fonts/custom/bold-italic.svg#IconicStrokeRegular) format("svg");
+  src:url(http://www.castellbisbal.cat/themes/castellbisbal/fonts/custom/bold-italic.eot?#iefix) format("embedded-opentype"),url(http://www.castellbisbal.cat/themes/castellbisbal/fonts/custom/bold-italic.svgz#IconicStrokeRegular) format("svg"),url(http://www.castellbisbal.cat/themes/castellbisbal/fonts/custom/bold-italic.svg#IconicStrokeRegular) format("svg");
   font-weight:700;
   font-style:italic;
 }
