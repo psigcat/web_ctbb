@@ -27,6 +27,15 @@
 <body>
 
 <div id="credits" title="Crèdits">
+	<p>Aquest servidor de mapes mostra cartografia del servei de SIG de l'Ajuntament de Castellbisbal</p>
+	<p>Webmaster: <a href="http://psig.es/">PSIG</a></p>
+	<p>Fonts cartogràfic:
+		<ul>
+			<li>Institut Cartogràfic i Geològic de Catalunya (ICGC)</li>
+			<li>Àrea Metropolitana de Barcelona (AMB)</li>
+			<li>Dirección General del Catastro</li>
+		</ul>
+	</p>
 	<p>Contacte amb nosaltres: <a href="mailto:servei.geoportal@castellbisbal.cat">servei.geoportal@castellbisbal.cat</a></p>
 </div>
 
@@ -43,7 +52,7 @@
 	</tr>
 	<tr>
 		<td><a href="index_activitats.php?map=Activitats"><img src="static/map3.png"/><br/>Activitats</a></td>
-		<td><a href="index_ortofotos_historial.php?map=Ortofotos históriques"><img src="static/map4.png"/><br/>Ortofotos históriques</a></td>
+		<!--<td><a href="index_ortofotos_historial.php?map=Ortofotos históriques"><img src="static/map4.png"/><br/>Ortofotos históriques</a></td>-->
 	</tr>
 	<tr>
 		<td colspan="2" class="req">Optimitzat per Firefox i Google Chrome, resolució de pantalla mínima 1387*856 píxels</td>
@@ -70,6 +79,7 @@
 	    });
 
 		$("a.btn").click(function() {
+			$( "#credits" ).show();
 			$( "#credits" ).dialog( "open" );
 		});
 	});

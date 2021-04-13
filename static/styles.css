@@ -81,8 +81,12 @@ button.ui-button {
 	font-weight: bold;
 }
 
+#credits {
+	display: none;
+}
+
 .ui-dialog {
-	width: 350px !important;
+	width: 500px !important;
 }
 
 .mapas {
