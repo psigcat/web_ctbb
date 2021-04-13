@@ -509,7 +509,7 @@
 	    <script src="js/libs/angular-locale_es.es.js"></script> 
 
         <script src="js/libs/html2canvas.js"></script>
-        <script src="js/libs/jspdf.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.3.1/jspdf.umd.min.js"></script>
         
         <!-- Application -->
     	<script src="js/app/app.js"></script>
