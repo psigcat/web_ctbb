@@ -17,7 +17,7 @@ class ControllerIndex{
 		$data['env']		= $this->_system->getEnviroment();
 		$data['token']		= session_id();		//token for cross site injection
 		$data['urlWMS']		= $this->_system->get('urlWMS');
-		$data['urlWMSqgis']	= $this->_system->get('urlWMSqgis_guia');
+		$data['urlWMSqgis']	= $this->_system->get('urlWMSqgis');
 
 		$detect 			= new Mobile_Detect();
 		$data['isMobile'] 	= ($detect->isMobile() === true && $detect->isTablet() === false)? '1' : '0';

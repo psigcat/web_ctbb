@@ -18,6 +18,7 @@ var raster						= null;		//background raster
 var filename 					= "mapService.js";
 var lastMouseMove				= new Date().getTime()+5000;
 var currentLayer				= null;		//current WMS layer
+var baseHref					= null;
 var urlWMS						= null;		//WMS service url
 var urlWMSqgis					= null;		//WMS service url qgis
 var highLightStyle				= null;		//ol.style for highlighted feature
@@ -39,6 +40,7 @@ var mousePosition				= null;
 var mainBar, subBar, mainToggle, catastroLayer;
 var overlays, baseLayers, baseLayerMap, baseLayerFoto, baseLayerTopo, baseLayerTopoAMB, baseLayerNull;
 var mapid, mapname;
+var QGIS_PROJECT_FILE;
 var printSource, printLayer, translatePrintBox, 
 	printTemplate = "plantilla_DIN_A4_horitzontal (1:500)";
 
@@ -77,13 +79,14 @@ function map_service($http,$rootScope){
 		}
 	}
 
-	function init(_urlWMS,_urlWMSqgis,_backgroundMap,_zoomTrigger,_placesService,_mapid,_mapname){
-		log("init("+_urlWMS+","+_urlWMSqgis+","+backgroundMap+","+_zoomTrigger+","+_mapid+","+_mapname+")");
+	function init(_baseHref,_urlWMS,_urlWMSqgis,_backgroundMap,_zoomTrigger,_placesService,_mapid,_mapname){
+		log("init("+_baseHref+","+_urlWMS+","+_urlWMSqgis+","+backgroundMap+","+_zoomTrigger+","+_mapid+","+_mapname+")");
 
 		//****************************************************************
     	//***********************      LOAD MAP    ***********************
     	//****************************************************************
 		backgroundMap				= _backgroundMap;
+		baseHref					= _baseHref;
 		urlWMS						= _urlWMS;
 		urlWMSqgis					= _urlWMSqgis;
 		zoomTrigger					= _zoomTrigger;
@@ -92,6 +95,7 @@ function map_service($http,$rootScope){
 		var extent    				= [-1.757,40.306,3.335,42.829];
 		mapid						= _mapid;
 		mapname						= _mapname;
+		QGIS_PROJECT_FILE			= "/home/ubuntu"+baseHref+mapid+".qgs";
 	
 		//background raster
 		raster 					= new ol.layer.Tile({ });
@@ -231,7 +235,8 @@ function map_service($http,$rootScope){
 
 				layerSwitcher = new ol.control.LayerSwitcher({ 
 					target: document.getElementById("layerswitcher"),
-					urlWMSqgis: urlWMSqgis
+					urlWMSqgis: urlWMSqgis,
+					QGIS_PROJECT_FILE: QGIS_PROJECT_FILE
 				});
 			    map.addControl(layerSwitcher);
 		        layerSwitcher.showPanel();
@@ -632,7 +637,7 @@ function map_service($http,$rootScope){
 						log("url", url);
 						itemsTotal++;
 
-						$http.get(url).then(function(response){
+						$http.get(url+"&MAP="+QGIS_PROJECT_FILE).then(function(response){
 
 							if(response) {
 
@@ -1326,7 +1331,7 @@ function map_service($http,$rootScope){
         });
 		//console.log(visibleLayers.toString());
 
-    	var url = urlWMSqgis+'?SERVICE=WMS&VERSION=1.3.0&REQUEST=GetPrint&FORMAT=pdf&TRANSPARENT=true&LAYERS='+visibleLayers.toString()+'&CRS=EPSG:3857&map0:STYLES=&map0:extent='+printSource.getExtent()+'&TEMPLATE='+printTemplate+'&DPI=120&map0:scale='+$("#printScale").val();
+    	var url = urlWMSqgis+'?SERVICE=WMS&VERSION=1.3.0&REQUEST=GetPrint&FORMAT=pdf&TRANSPARENT=true&LAYERS='+visibleLayers.toString()+'&CRS=EPSG:3857&map0:STYLES=&map0:extent='+printSource.getExtent()+'&TEMPLATE='+printTemplate+'&DPI=120&map0:scale='+$("#printScale").val()+"&MAP="+QGIS_PROJECT_FILE;
 
 		console.log(url);
 

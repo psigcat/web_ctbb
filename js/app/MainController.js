@@ -60,7 +60,7 @@ Controller.$inject = [
 			placesService.init(baseHref,_token);
 			
 			// map initialisation
-			mapService.init(urlWMS,urlWMSqgis,$scope.backgroundmap,zoomTrigger,placesService,mapid,mapname);
+			mapService.init(baseHref,urlWMS,urlWMSqgis,$scope.backgroundmap,zoomTrigger,placesService,mapid,mapname);
 
 			// load carrers
             $.when(
