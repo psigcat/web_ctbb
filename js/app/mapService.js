@@ -226,6 +226,7 @@ function map_service($http,$rootScope){
 		        //map.addLayer(raster);
 		        map.setView(view);
 		        map.set("urlWMSqgis", urlWMSqgis);
+		        map.set("QGIS_PROJECT_FILE", QGIS_PROJECT_FILE);
 				viewProjection = view.getProjection();
 				viewResolution = view.getResolution();
 
@@ -235,8 +236,6 @@ function map_service($http,$rootScope){
 
 				layerSwitcher = new ol.control.LayerSwitcher({ 
 					target: document.getElementById("layerswitcher"),
-					urlWMSqgis: urlWMSqgis,
-					QGIS_PROJECT_FILE: QGIS_PROJECT_FILE
 				});
 			    map.addControl(layerSwitcher);
 		        layerSwitcher.showPanel();

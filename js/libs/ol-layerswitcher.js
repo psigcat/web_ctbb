@@ -352,7 +352,7 @@ var LayerSwitcher = function (_Control) {
                             
                             if (!sublayer.mapproxy) {
                                 // dynamic from qgis server
-                                img.src = map.get("urlWMSqgis") + '?SERVICE=WMS&VERSION=1.3.0&REQUEST=GetLegendGraphic&LAYER='+sublayer.name+'&FORMAT=image/png&SLD_VERSION=1.1.0&MAP='+QGIS_PROJECT_FILE;
+                                img.src = map.get("urlWMSqgis") + '?SERVICE=WMS&VERSION=1.3.0&REQUEST=GetLegendGraphic&LAYER='+sublayer.name+'&FORMAT=image/png&SLD_VERSION=1.1.0&MAP='+map.get("QGIS_PROJECT_FILE");
                             }
                             else {
                                 // static from directory
@@ -373,7 +373,7 @@ var LayerSwitcher = function (_Control) {
                     } 
                     else if (!lyr.get('mapproxy') && lyr.get('mapproxy') !== undefined) {
                         // dynamic from qgis server
-                        img.src = map.get("urlWMSqgis") + '?SERVICE=WMS&VERSION=1.3.0&REQUEST=GetLegendGraphic&LAYER='+lyrTitle+'&FORMAT=image/png&SLD_VERSION=1.1.0&MAP='+QGIS_PROJECT_FILE;
+                        img.src = map.get("urlWMSqgis") + '?SERVICE=WMS&VERSION=1.3.0&REQUEST=GetLegendGraphic&LAYER='+lyrTitle+'&FORMAT=image/png&SLD_VERSION=1.1.0&MAP='+map.get("QGIS_PROJECT_FILE");
                     }
                     else {
                         // static from directory
