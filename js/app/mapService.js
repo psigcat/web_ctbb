@@ -1353,6 +1353,12 @@ function map_service($http,$rootScope){
 		else if (paper === "a4_ver") {
 			printTemplate = "plantilla_DIN_A4_vertical (1:500)";
 		}
+		else if (paper === "a3_hor") {
+			printTemplate = "plantilla_DIN_A3_horitzontal (1:500)";
+		}
+		else if (paper === "a3_ver") {
+			printTemplate = "plantilla_DIN_A3_vertical (1:500)";
+		}
 
 		console.log(paper, dim, scale, printTemplate);
 
