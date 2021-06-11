@@ -104,7 +104,8 @@
                     </select></p>
                     <p><select id="printScale" name="printScale">
                         <option value="200">1:200</option>
-                        <option value="500" selected="selected">1:500</option>
+                        <option value="500">1:500</option>
+                        <option value="1000" selected="selected">1:1.000</option>
                         <option value="2000">1:2.000</option>
                         <option value="5000">1:5.000</option>
                         <option value="10000">1:10.000</option>
