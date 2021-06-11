@@ -1354,10 +1354,10 @@ function map_service($http,$rootScope){
 			printTemplate = "plantilla_DIN_A4_vertical (1:500)";
 		}
 		else if (paper === "a3_hor") {
-			printTemplate = "plantilla_DIN_A3_horitzontal (1:500)";
+			printTemplate = "plantilla_DIN_A3_horitzontal (1:1000)";
 		}
 		else if (paper === "a3_ver") {
-			printTemplate = "plantilla_DIN_A3_vertical (1:500)";
+			printTemplate = "plantilla_DIN_A3_vertical (1:1000)";
 		}
 
 		console.log(paper, dim, scale, printTemplate);
