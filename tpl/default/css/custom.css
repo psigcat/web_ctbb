@@ -785,6 +785,7 @@ li.layer i {
 /* credits */
 #menu .info {
   padding-top: 16px;
+  padding-left: 3px;
   float: right;
 }
 

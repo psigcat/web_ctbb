@@ -25,7 +25,7 @@ class ControllerIndex{
 		// set to POUM by default
 		$data['mapid'] = "poum_parcel";
 		$data['mapname'] = "POUM parcellari";
-		$data['title'] = "POUM Parcellari propi";
+		$data['title'] = "POUM Parcel·lari propi";
 			
 		$this->_system->fShow($this->_system->get('skin')."/tpl_home.php",$data);
 		

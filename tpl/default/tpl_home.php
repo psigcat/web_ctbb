@@ -50,7 +50,7 @@
                         <li><a href="#" class="layers" title="Gestor de capes"><img src="tpl/default/img/menuLayers.png" /></a></li>
                         <li><a href="#" class="search" title="Cercadors"><img src="tpl/default/img/menuSearch.png" /></a></li>
                         <li><a href="#" class="print" title="Impressions"><img src="tpl/default/img/menuPrint.png" /></a></li>
-                        <?php if ($mapid == "poum") : ?>
+                        <?php if ($mapid == "poum" || $mapid == "poum_parcel") : ?>
                             <li><a href="#" class="reports" title="Informació Adicional"><img src="tpl/default/img/menuDoc.png" /></a></li>
                         <?php endif; ?>
                         <li class="info"><a class="btn" href="#">i</a>
