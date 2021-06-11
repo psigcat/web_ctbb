@@ -99,8 +99,8 @@
                         <option value="a4" data-dim="[297,188]">DIN A4</option>
                         <option value="a4_hor" data-dim="[297,188]">DIN A4 Horitzontal</option>
                         <option value="a4_ver" data-dim="[188,260]">DIN A4 Vertical</option>
-                        <option value="a3_hor" data-dim="[297,420]">DIN A3 Horitzontal</option>
-                        <option value="a3_ver" data-dim="[420,297]">DIN A3 Vertical</option>
+                        <option value="a3_hor" data-dim="[420,253]">DIN A3 Horitzontal</option>
+                        <option value="a3_ver" data-dim="[253,380]">DIN A3 Vertical</option>
                     </select></p>
                     <p><select id="printScale" name="printScale">
                         <option value="200">1:200</option>
