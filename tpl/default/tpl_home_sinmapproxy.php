@@ -15,7 +15,7 @@
         <link rel="stylesheet" href="http://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
         <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
         <!--<link href="http://cdnjs.cloudflare.com/ajax/libs/x-editable/1.5.1/bootstrap3-editable/css/bootstrap-editable.css" rel="stylesheet">-->
-        <link rel="stylesheet" href="js/libs/ol-layerswitcher.css">
+        <link rel="stylesheet" href="js/app/ol-layerswitcher.css">
 		<link rel="stylesheet" href="js/libs/font-awesome.min.css">
         <link rel="stylesheet" href="js/libs/ol-ext.min.css">
 		<link rel="stylesheet" href="tpl/default/css/custom.css" type="text/css" charset="utf-8">
@@ -478,7 +478,7 @@
         <script src="js/app/olLayerControl.js"></script>
         <script src="js/app/olOpacityControl.js"></script>
         <script src="js/libs/ol-ext.min.js"></script>
-        <script src="js/libs/ol-layerswitcher.js"></script>
+        <script src="js/app/ol-layerswitcher.js"></script>
         <script src="http://cdnjs.cloudflare.com/ajax/libs/proj4js/2.4.4/proj4.js"></script>
         <script src="http://epsg.io/25831.js"></script>
 
