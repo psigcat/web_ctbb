@@ -350,14 +350,14 @@ var LayerSwitcher = function (_Control) {
                             var img = document.createElement('img');
                             img.className = 'legend';
                             
-                            if (!sublayer.mapproxy) {
+                            //if (!sublayer.mapproxy) {
                                 // dynamic from qgis server
                                 img.src = map.get("urlWMSqgis") + '?SERVICE=WMS&VERSION=1.3.0&REQUEST=GetLegendGraphic&LAYER='+sublayer.name+'&FORMAT=image/png&SLD_VERSION=1.1.0&MAP='+map.get("QGIS_PROJECT_FILE");
-                            }
+                            /*}
                             else {
                                 // static from directory
                                 img.src = "legend/"+sublayer.mapproxy+'.png';
-                            }
+                            }*/
                             
                             li.appendChild(img);
                         }
@@ -371,14 +371,14 @@ var LayerSwitcher = function (_Control) {
                     if (lyr.get('title') === 'Catastro') {
                         img.src = 'http://ovc.catastro.meh.es/Cartografia/WMS/simbolos.png?SERVICE=WMS&VERSION=1.3.0&REQUEST=GetLegendGraphic&LAYER=Catastro&FORMAT=image/png&SLD_VERSION=1.1.0';
                     } 
-                    else if (!lyr.get('mapproxy') && lyr.get('mapproxy') !== undefined) {
+                    else /*if (!lyr.get('mapproxy') && lyr.get('mapproxy') !== undefined)*/ {
                         // dynamic from qgis server
                         img.src = map.get("urlWMSqgis") + '?SERVICE=WMS&VERSION=1.3.0&REQUEST=GetLegendGraphic&LAYER='+lyrTitle+'&FORMAT=image/png&SLD_VERSION=1.1.0&MAP='+map.get("QGIS_PROJECT_FILE");
                     }
-                    else {
+                    /*else {
                         // static from directory
                         img.src = "legend/"+lyr.get('mapproxy')+'.png';
-                    }
+                    }*/
                     li.appendChild(document.createElement('br'));
                     li.appendChild(img);
                 }

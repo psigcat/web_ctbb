@@ -93,8 +93,12 @@ ol.control.olLayerControl = function (opt_options) {
         target: options.target
     });
 };
-ol.inherits(ol.control.olLayerControl, ol.control.Control);
 
+var ol_ext_inherits = function(child,parent) {
+    child.prototype = Object.create(parent.prototype);
+    child.prototype.constructor = child;
+};
+ol_ext_inherits(ol.control.olLayerControl, ol.control.Control);
 
 /**
  * Overload setMap to use the view projection's validity extent
