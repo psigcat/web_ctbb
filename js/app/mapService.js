@@ -12,8 +12,6 @@ var backgroundMapUrl			= 'http://{1-4}.basemaps.cartocdn.com/light_all/{z}/{x}/{
 var customLayer					= null;		//wms layer
 var highLightLayer				= null;		//layer for highlighted town
 var highLightSource				= null;		//source for highlifgted polygon
-var viewProjection 				= null;
-var viewResolution 				= null;
 var raster						= null;		//background raster
 var filename 					= "mapService.js";
 var lastMouseMove				= new Date().getTime()+5000;
@@ -33,6 +31,7 @@ var parcelaLayer				= null;
 var parcelaSource				= null;
 var placesService 				= null;
 var renderedLayers				= {};
+var renderedLayersVectorial		= {};
 var qgisSources					= {};
 var qgisSublayerSources			= {};
 var layerSwitcher;
@@ -148,7 +147,6 @@ function map_service($http,$rootScope){
 				    		})
 				    	});
 
-	    // proj4.defs("EPSG:25831","+proj=utm +zone=31 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs");
 	    /*baseLayerTopoAMB = new ol.layer.Tile({
 							name: 'baseLayerTopoAMB',
 	                        title: 'Topogràfic (by AMB)',
@@ -191,12 +189,15 @@ function map_service($http,$rootScope){
 			//baseLayerMap
 		];
 
+	    // https://epsg.io/25831
+		proj4.defs("EPSG:25831","+proj=utm +zone=31 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs");
+		ol.proj.proj4.register(proj4);
+
 		$.when(
             $.getJSON("js/data/"+mapid+".qgs.json", {})   
             .done (function( data ) {
 
             	overlays = data;
-            	//console.log(overlays);
 
             	ortofotosLayers = getLayerOverlays(true);
 
@@ -217,18 +218,15 @@ function map_service($http,$rootScope){
 						];
 
 				//map
-				map 				= new ol.Map({
-										target: 'map',
-										layers: qgisLayers,
-										controls: ol.control.defaults({attribution: false}),
-		        					});
+				map = new ol.Map({
+					target: 'map',
+					layers: qgisLayers,
+					controls: ol.control.defaults({attribution: false}),
+					view: view,
+				});
 
-		        //map.addLayer(raster);
-		        map.setView(view);
-		        map.set("urlWMSqgis", urlWMSqgis);
-		        map.set("QGIS_PROJECT_FILE", QGIS_PROJECT_FILE);
-				viewProjection = view.getProjection();
-				viewResolution = view.getResolution();
+				map.set("urlWMSqgis", urlWMSqgis);
+				map.set("QGIS_PROJECT_FILE", QGIS_PROJECT_FILE);
 
 				setHighLightStyle();
 				setQgisLayerSources();
@@ -406,19 +404,74 @@ function map_service($http,$rootScope){
 		});	}
 
 	function getLayerOverlays(external=false) {
-		var layers = [];
+		let layers = [];
         if (!external) layers.push(getCatastroOverlay());
 
-	    for (var i=overlays.length-1; i>=0; i--) {
+	    for (let i=overlays.length-1; i>=0; i--) {
 
-	    	var layer = overlays[i];
-
-	    	var layer_name = null, 
+	    	let layer = overlays[i],
+	    		layer_name = null, 
 	    		url = null,
 	    		type = null,
 	    		projection = null,
 	    		version = null,
 	    		transparent = null;
+
+	    	// make wfs layer list
+	    	if (!external) {
+
+	    		if (layer.children) {
+
+	    			// layer group
+		    		let groupLayers = [];
+
+		    		// vector layer, one layer for every group child
+		    		//layer.children.forEach(function(sublayer, i) {
+		    		for (let j=layer.children.length-1; j>=0; j--) {
+
+		    			if (layer.children[j].vectorial) {
+
+			    			let sublayer = layer.children[j];
+			    			//console.log(i, j, sublayer.name);
+
+				            let vectorLayer = defineWfsLayer(sublayer);
+
+							groupLayers.push(vectorLayer);
+							if (layer.name != "") {
+								renderedLayersVectorial[layer.name] = vectorLayer;
+							}
+
+							// apply style
+							fetch("js/data/sld/"+mapid+".qgs_"+sublayer.name+".sld")
+								.then(response => response.text())
+								.then(sld => applyVectorStyle(vectorLayer, sld, sublayer.name));
+						}
+					}
+
+					if (groupLayers.length > 0) {
+						layers.push(new ol.layer.Group({
+			    			title: layer.name,
+			    			mapproxy: layer.mapproxy,
+			    			combine: true,
+			    			visible: layer.visible,
+			    			layers: groupLayers,
+			    		}));
+			    	}
+			    }
+			    else if (layer.vectorial) {
+			    	// layer
+					console.log(layer.name);
+
+		            let vectorLayer = defineWfsLayer(layer);
+
+					// apply style
+					fetch("js/data/sld/"+mapid+".qgs_"+layer.name+".sld")
+						.then(response => response.text())
+						.then(sld => applyVectorStyle(vectorLayer, sld, layer.name));
+
+		    		layers.push(vectorLayer);
+			    }
+	    	}
 
 	    	if (!external && !layer.external) {
 	    		// intern server (qgis or mapproxy)
@@ -473,17 +526,50 @@ function map_service($http,$rootScope){
 		                children: layer.children,
 		                fields: layer.fields,
 		                indentifiable: layer.indentifiable,
+		                vectorial: layer.vectorial,
 					});
-				layers.push(newLayer);
+
+				let vectorial = true;
+				if (layer.children) {
+					for (let j=layer.children.length-1; j>=0; j--) {
+		    			if (!layer.children[j].vectorial) {
+		    				vectorial = false;
+		    				break;
+		    			}
+		    		}
+				}
+				else if (!layer.vectorial) {
+					vectorial = false;
+				}
+
+				if (!vectorial) layers.push(newLayer);
+
 				if (layer.name != "") {
 					renderedLayers[layer.name] = newLayer;
 				}
 			}
 		}
 
-		//console.log(renderedLayers);
-
 		return layers;
+	}
+
+	function defineWfsLayer(layer) {
+        return new ol.layer.Vector({
+    		title: layer.name,
+    		qgisname: layer.qgisname,
+    		mapproxy: layer.mapproxy,
+    		type: layer.type,
+			showlegend: layer.showlegend,
+            hidden: layer.hidden,
+            children: layer.children,
+            fields: layer.fields,
+            indentifiable: layer.indentifiable,
+
+			source: new ol.source.Vector({
+				format: new ol.format.GeoJSON(),
+	            url: 'http://mapa.psig.es/qgisserver/wfs3/collections/'+layer.name+'/items.geojson?MAP=/home/ubuntu/ctbb/'+mapid+'.qgs&limit=1000'
+			}),
+		});
 	}
 
 	function getCatastroOverlay() {
@@ -502,6 +588,34 @@ function map_service($http,$rootScope){
         });
         return catastroLayer;
 	}
+
+	function applyVectorStyle(vectorLayer, sld) {
+
+        const sldObject = SLDReader.Reader(sld),
+        	sldLayer = SLDReader.getLayer(sldObject),
+        	style = SLDReader.getStyle(sldLayer, sldLayer.name);
+
+		//console.log(sldLayer.name, style);
+
+		if (style.hasOwnProperty("featuretypestyles") && style.featuretypestyles.length > 0) {
+
+	        const featureTypeStyle = style.featuretypestyles[0];
+
+	        vectorLayer.setStyle(SLDReader.createOlStyleFunction(featureTypeStyle, {
+				// Use the convertResolution option to calculate a more accurate resolution.
+				convertResolution: viewResolution => {
+					const viewCenter = map.getView().getCenter();
+					return ol.proj.getPointResolution(map.getView().getProjection(), viewResolution, viewCenter);
+				},
+				// If you use point icons with an ExternalGraphic, you have to use imageLoadCallback to
+				// to update the vector layer when an image finishes loading.
+				// If you do not do this, the image will only become visible after the next pan/zoom of the layer.
+				imageLoadedCallback: () => {
+					vectorLayer.changed();
+				},
+	        }));
+	    }
+    }
 
 	function setQgisLayerSources() {
 		overlays.forEach(function(layer, i) {
@@ -587,9 +701,9 @@ function map_service($http,$rootScope){
 
 	    Object.keys(qgisSources).forEach(function(key){
 
-    		//console.log(key, renderedLayers[key].get("indentifiable"), renderedLayers[key].get("children"));
+    		//console.log(key, renderedLayers[key].getVisible(), renderedLayers[key].get("vectorial"), renderedLayers[key].get("indentifiable"), renderedLayers[key].get("children"));
 
-    		if (renderedLayers[key].getVisible()) {
+    		if (renderedLayers[key].getVisible() || renderedLayers[key].get("vectorial") && renderedLayersVectorial[key].getVisible()) {
 
 				// request to qgis server on localhost
 	    		var sources = [];
@@ -620,8 +734,8 @@ function map_service($http,$rootScope){
 					//console.log(i, coordinates, source.getUrls(), source.getParams(), source.getProperties());
 
 	    			// layer source
-		    		url = source.getGetFeatureInfoUrl(
-						coordinates, map.getView().getResolution(), viewProjection,
+		    		url = source.getFeatureInfoUrl(
+						coordinates, map.getView().getResolution(), map.getView().getProjection(),
 						{
 							'INFO_FORMAT': 'text/xml', 
 							'FEATURE_COUNT': 100,
@@ -648,8 +762,8 @@ function map_service($http,$rootScope){
 								$($xml.find('Layer')).each(function(){
 
 									if ($(this).children().length > 0) {
-										var layer = $(this);
-										var layerName = layer.attr('name');
+										let layer = $(this);
+										let layerName = layer.attr('name');
 
 										//console.log(layerName);
 										
@@ -659,8 +773,8 @@ function map_service($http,$rootScope){
 
 												itemsResult = true;
 
-												var feature = $(this);
-												var id = feature.find('Attribute[name="id"]').attr('value');
+												let feature = $(this);
+												let id = feature.find('Attribute[name="id"]').attr('value');
 												if (id == undefined && layerName == "Activitats") 
 													id = feature.find('Attribute[name="id_activitat"]').attr('value');
 
@@ -668,19 +782,19 @@ function map_service($http,$rootScope){
 
 												    $rootScope.$broadcast('featureInfoReceived',url);
 
-													var ruta = 'files/';
+													let ruta = 'files/';
 
 													if (layerName.startsWith("@")) {
 														layerName = layerName.substring(2);
 													}
-													var html = "<h3>"+layerName+"</h3>";
+													let html = "<h3>"+layerName+"</h3>";
 
-													var l = source.getParams()['LAYERS'];
+													let l = source.getParams()['LAYERS'];
 
 													if (infoLayers[l] != undefined) {
 
 														infoLayers[l].forEach(function(field){
-															var value = feature.find('Attribute[name="'+field.name+'"]').attr('value');
+															let value = feature.find('Attribute[name="'+field.name+'"]').attr('value');
 
 															if (value.startsWith("../links/")) {
 																html += getHtmlA(field.name, "Veure fitxa", value);

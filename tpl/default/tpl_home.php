@@ -1,29 +1,28 @@
 <!DOCTYPE html>
 <html>
-	<head>
-		<title><?php echo $title; ?> de Castellbisbal</title>
+    <head>
+        <title><?php echo $title; ?> de Castellbisbal</title>
 
         <link rel="shortcut icon" href="http://www.castellbisbal.cat/themes/castellbisbal/images/favicons/favicon.ico"> 
-        <link rel="icon" type="image/png" href="http://www.castellbisbal.cat/front/view/images/favicons/favicon-96x96.png" sizes="96x96"> 
         <link rel="icon" type="image/png" href="http://www.castellbisbal.cat/themes/castellbisbal/images/favicons/favicon-16x16.png" sizes="16x16">
         <link rel="icon" type="image/png" href="http://www.castellbisbal.cat/themes/castellbisbal/images/favicons/favicon-32x32.png" sizes="32x32"><meta name="msapplication-TileColor" content="#cee1ef"> 
         <meta name="msapplication-config" content="http://www.castellbisbal.cat/front/view/images/favicons/browserconfig.xml">
         
         <meta name="theme-color" content="#ffffff">
 
-        <link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/openlayers/4.6.5/ol.css" type="text/css">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/openlayers/openlayers.github.io@master/en/v6.7.0/css/ol.css" type="text/css">
         <link rel="stylesheet" href="http://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
         <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
         <!--<link href="http://cdnjs.cloudflare.com/ajax/libs/x-editable/1.5.1/bootstrap3-editable/css/bootstrap-editable.css" rel="stylesheet">-->
         <link rel="stylesheet" href="js/app/ol-layerswitcher.css">
-		<link rel="stylesheet" href="js/libs/font-awesome.min.css">
-        <link rel="stylesheet" href="js/libs/ol-ext.min.css">
-		<link rel="stylesheet" href="tpl/default/css/custom.css" type="text/css" charset="utf-8">
-		<link rel="stylesheet" href="tpl/default/css/animate.css" type="text/css" charset="utf-8">
-		<meta name="viewport" content="width=device-width, initial-scale=1.0">
-		<meta charset="utf-8" />
-	</head>
-	<body class="<?php echo $mapid; ?>">
+        <link rel="stylesheet" href="js/libs/font-awesome.min.css">
+        <link rel="stylesheet" href="https://cdn.rawgit.com/Viglino/ol-ext/master/dist/ol-ext.min.css">
+        <link rel="stylesheet" href="tpl/default/css/custom.css" type="text/css" charset="utf-8">
+        <link rel="stylesheet" href="tpl/default/css/animate.css" type="text/css" charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta charset="utf-8" />
+    </head>
+    <body class="<?php echo $mapid; ?>">
 
         <div id="credits" title="Crèdits">
             <p>Aquest servidor de mapes mostra cartografia del servei de SIG de l'Ajuntament de Castellbisbal</p>
@@ -37,7 +36,7 @@
             </p>
             <p>Contacte amb nosaltres: <a href="mailto:servei.geoportal@castellbisbal.cat">servei.geoportal@castellbisbal.cat</a></p>
         </div>
-    	
+        
         <div id="angularAppContainer" ng-app="app" ng-controller="mainController as mc" ng-init="initApp('<?php echo $baseHref; ?>','<?php echo $urlWMS; ?>','<?php echo $urlWMSqgis; ?>','<?php echo $env; ?>','<?php echo $token; ?>','<?php echo $isMobile; ?>', '<?php echo $mapid; ?>', '<?php echo $mapname; ?>')">
             
             <div class="window main">
@@ -62,25 +61,25 @@
             <div class="window left-side reports">
                 <h2>
                     <img src="tpl/default/img/menuDoc.png" class="ic" />
-	                Informació addicional
-	                <a href="#" class="pull-right" ng-click="toggleReports(0)"><i class="fa fa-fw fa-times"></i></a>
-	            </h2>
-	            <div class="content">
-    	            <p>La documentació disponible en aquest lloc web no té cap valor normatiu. Només serveix de consulta i referència, i conté algunes interpretacions per poder fer la consulta telemàtica. Els únics documents amb valor normatiu són els propis expedients urbanístics aprovats definitivament i sempre i quan no hagin estat subjectes a una sentència ferma emesa per un tribunal de justícia.</p>
+                    Informació addicional
+                    <a href="#" class="pull-right" ng-click="toggleReports(0)"><i class="fa fa-fw fa-times"></i></a>
+                </h2>
+                <div class="content">
+                    <p>La documentació disponible en aquest lloc web no té cap valor normatiu. Només serveix de consulta i referència, i conté algunes interpretacions per poder fer la consulta telemàtica. Els únics documents amb valor normatiu són els propis expedients urbanístics aprovats definitivament i sempre i quan no hagin estat subjectes a una sentència ferma emesa per un tribunal de justícia.</p>
                     <p>Els documents oficials, amb validesa normativa es troben a la Direcció General d’Urbanisme de la Generalitat de Catalunya, que disposa de l'original d’aquests documents. També es pot consultar una còpia en PDF en aquest enllaç:</p>
                     <p><a href="http://ptop.gencat.cat/rpucportal/AppJava/cercaExpedient.do?reqCode=loadSenseCriteris" target="_blank"><img src="tpl/default/img/registre.png"></a> <a href="http://ptop.gencat.cat/rpucportal/AppJava/cercaExpedient.do?reqCode=loadSenseCriteris" target="_blank">Registre del planejament urbanístic de Catalunya</a></p>
                     <p>L'Ajuntament disposa, a més, d'una còpia en PDF estructurada del contingut del POUM defintivament aprovat per a la seva consulta en aquest enllaç:</p>
                     <p><a href="#" class="normativa-button"><img src="tpl/default/img/pdf.png"></a> <a href="#" class="normativa-button">Normativa urbanística completa</a></p>
                     <p>Es prohibeix qualsevol reproducció total o parcial si no ha estat expressament autoritzada per l’Ajuntament de Castellbisbal.</p>
                     <p>Si disposeu d'informació més precisa o voleu enviar algun suggeriment feu-ho aquí.</p>
-	            </div>
+                </div>
             </div>
 
             <div class="window right-side ng-cloak" ng-cloak ng-show="infoPanel" id="infoPanel">
                 <h2>
-	                INFO
-	                <a href="#" class="pull-right"><i class="fa fa-fw fa-times"></i></a>
-	            </h2>
+                    INFO
+                    <a href="#" class="pull-right"><i class="fa fa-fw fa-times"></i></a>
+                </h2>
                 <div class="content"></div>
                 <div id="loading"></div>
                 <div class="content-coord"></div>                 
@@ -268,7 +267,7 @@
                 </div>
             </div>
             
-        	<div id="map"></div>
+            <div id="map"></div>
         </div>
 
         <!-- jquery -->
@@ -489,39 +488,33 @@
             });
         </script>
         
-    	<!-- Angular js -->
-    	<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular.min.js"></script>
-    	
-    	<!-- Open layers -->
-        <script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/openlayers/4.6.5/ol.js"></script>
+        <!-- Angular js -->
+        <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular.min.js"></script>
+        
+        <!-- Open layers -->
+        <script type="text/javascript" src="https://cdn.jsdelivr.net/gh/openlayers/openlayers.github.io@master/en/v6.7.0/build/ol.js"></script>
         <script src="js/app/olLayerControl.js"></script>
         <script src="js/app/olOpacityControl.js"></script>
-        <script src="js/libs/ol-ext.min.js"></script>
+        <script src="https://cdn.rawgit.com/Viglino/ol-ext/master/dist/ol-ext.min.js"></script>
         <script src="js/app/ol-layerswitcher.js"></script>
-        <script src="http://cdnjs.cloudflare.com/ajax/libs/proj4js/2.4.4/proj4.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/proj4js/2.7.5/proj4.js"></script>
         <script src="http://epsg.io/25831.js"></script>
 
         <!-- angular-bootstrap-ui -->
-	    <script src="js/libs/angular-animate.min.js"></script>
-	    <script src="js/libs/ui-bootstrap-tpls-2.5.0.min.js"></script> 
-	    <script src="js/libs/angular-locale_es.es.js"></script> 
+        <script src="js/libs/angular-animate.min.js"></script>
+        <script src="js/libs/ui-bootstrap-tpls-2.5.0.min.js"></script> 
+        <script src="js/libs/angular-locale_es.es.js"></script> 
 
         <script src="js/libs/html2canvas.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.3.1/jspdf.umd.min.js"></script>
         
         <!-- Application -->
-    	<script src="js/app/app.js"></script>
-    	<script src="js/app/MainController.js"></script>
-    	<script src="js/app/mapService.js"></script>
-    	<script src="js/common/placesService.js"></script>
-    	<script src="js/common/loggerService.js"></script>
-    	 
-	</body>
+        <script src="js/app/app.js"></script>
+        <script src="js/app/MainController.js"></script>
+        <script src="js/libs/sldreader.js"></script>
+        <script src="js/app/mapService.js"></script>
+        <script src="js/common/placesService.js"></script>
+        <script src="js/common/loggerService.js"></script>
+         
+    </body>
 </html>
-
-
-
-
-
-
-	
