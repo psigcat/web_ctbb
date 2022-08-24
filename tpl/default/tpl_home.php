@@ -3,20 +3,20 @@
     <head>
         <title><?php echo $title; ?> de Castellbisbal</title>
 
-        <link rel="shortcut icon" href="http://www.castellbisbal.cat/themes/castellbisbal/images/favicons/favicon.ico"> 
-        <link rel="icon" type="image/png" href="http://www.castellbisbal.cat/themes/castellbisbal/images/favicons/favicon-16x16.png" sizes="16x16">
-        <link rel="icon" type="image/png" href="http://www.castellbisbal.cat/themes/castellbisbal/images/favicons/favicon-32x32.png" sizes="32x32"><meta name="msapplication-TileColor" content="#cee1ef"> 
-        <meta name="msapplication-config" content="http://www.castellbisbal.cat/front/view/images/favicons/browserconfig.xml">
+        <link rel="shortcut icon" href="https://www.castellbisbal.cat/themes/castellbisbal/images/favicons/favicon.ico"> 
+        <link rel="icon" type="image/png" href="https://www.castellbisbal.cat/themes/castellbisbal/images/favicons/favicon-16x16.png" sizes="16x16">
+        <link rel="icon" type="image/png" href="https://www.castellbisbal.cat/themes/castellbisbal/images/favicons/favicon-32x32.png" sizes="32x32"><meta name="msapplication-TileColor" content="#cee1ef"> 
+        <meta name="msapplication-config" content="https://www.castellbisbal.cat/front/view/images/favicons/browserconfig.xml">
         
         <meta name="theme-color" content="#ffffff">
 
-        <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/openlayers/openlayers.github.io@master/en/v6.7.0/css/ol.css" type="text/css">
-        <link rel="stylesheet" href="http://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
-        <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
-        <!--<link href="http://cdnjs.cloudflare.com/ajax/libs/x-editable/1.5.1/bootstrap3-editable/css/bootstrap-editable.css" rel="stylesheet">-->
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/ol@6.15.1/ol.css" type="text/css">
+        <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+        <!--<link href="https://cdnjs.cloudflare.com/ajax/libs/x-editable/1.5.1/bootstrap3-editable/css/bootstrap-editable.css" rel="stylesheet">-->
         <link rel="stylesheet" href="js/app/ol-layerswitcher.css">
         <link rel="stylesheet" href="js/libs/font-awesome.min.css">
-        <link rel="stylesheet" href="https://cdn.rawgit.com/Viglino/ol-ext/master/dist/ol-ext.min.css">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/ol-ext@3.2.30/dist/ol-ext.min.css">
         <link rel="stylesheet" href="tpl/default/css/custom.css" type="text/css" charset="utf-8">
         <link rel="stylesheet" href="tpl/default/css/animate.css" type="text/css" charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -26,7 +26,7 @@
 
         <div id="credits" title="Crèdits">
             <p>Aquest servidor de mapes mostra cartografia del servei de SIG de l'Ajuntament de Castellbisbal</p>
-            <p>Webmaster: <a href="http://psig.es/">PSIG</a></p>
+            <p>Webmaster: <a href="https://psig.es/">PSIG</a></p>
             <p>Fonts cartogràfic:
                 <ul>
                     <li>Institut Cartogràfic i Geològic de Catalunya (ICGC)</li>
@@ -67,7 +67,7 @@
                 <div class="content">
                     <p>La documentació disponible en aquest lloc web no té cap valor normatiu. Només serveix de consulta i referència, i conté algunes interpretacions per poder fer la consulta telemàtica. Els únics documents amb valor normatiu són els propis expedients urbanístics aprovats definitivament i sempre i quan no hagin estat subjectes a una sentència ferma emesa per un tribunal de justícia.</p>
                     <p>Els documents oficials, amb validesa normativa es troben a la Direcció General d’Urbanisme de la Generalitat de Catalunya, que disposa de l'original d’aquests documents. També es pot consultar una còpia en PDF en aquest enllaç:</p>
-                    <p><a href="http://ptop.gencat.cat/rpucportal/AppJava/cercaExpedient.do?reqCode=loadSenseCriteris" target="_blank"><img src="tpl/default/img/registre.png"></a> <a href="http://ptop.gencat.cat/rpucportal/AppJava/cercaExpedient.do?reqCode=loadSenseCriteris" target="_blank">Registre del planejament urbanístic de Catalunya</a></p>
+                    <p><a href="https://ptop.gencat.cat/rpucportal/AppJava/cercaExpedient.do?reqCode=loadSenseCriteris" target="_blank"><img src="tpl/default/img/registre.png"></a> <a href="https://ptop.gencat.cat/rpucportal/AppJava/cercaExpedient.do?reqCode=loadSenseCriteris" target="_blank">Registre del planejament urbanístic de Catalunya</a></p>
                     <p>L'Ajuntament disposa, a més, d'una còpia en PDF estructurada del contingut del POUM defintivament aprovat per a la seva consulta en aquest enllaç:</p>
                     <p><a href="#" class="normativa-button"><img src="tpl/default/img/pdf.png"></a> <a href="#" class="normativa-button">Normativa urbanística completa</a></p>
                     <p>Es prohibeix qualsevol reproducció total o parcial si no ha estat expressament autoritzada per l’Ajuntament de Castellbisbal.</p>
@@ -249,7 +249,7 @@
                 </h2>
                 <div class="content">
                     <div class="row">
-                        <iframe src="http://mapa.psig.es/ctbb/normativas" width="100%" height="575px" frameborder="0"></iframe>
+                        <iframe src="https://mapa.psig.es/ctbb/normativas" width="100%" height="575px" frameborder="0"></iframe>
                     </div>
                 </div>
             </div>
@@ -271,13 +271,13 @@
         </div>
 
         <!-- jquery -->
-        <script src="http://code.jquery.com/jquery-2.2.4.min.js"
+        <script src="https://code.jquery.com/jquery-2.2.4.min.js"
                 integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44="
                 crossorigin="anonymous"></script>
-        <script src="http://code.jquery.com/ui/1.12.1/jquery-ui.min.js"
+        <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"
                 integrity="sha256-VazP97ZCwtekAsvgPBSUwPFKdrwD3unUfSGVYrahUqU="
                 crossorigin="anonymous"></script>
-        <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"
                 integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
                 crossorigin="anonymous"></script>
         <script src="//cdnjs.cloudflare.com/ajax/libs/x-editable/1.5.1/bootstrap3-editable/js/bootstrap-editable.min.js"></script>
@@ -489,16 +489,16 @@
         </script>
         
         <!-- Angular js -->
-        <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular.min.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular.min.js"></script>
         
         <!-- Open layers -->
-        <script type="text/javascript" src="https://cdn.jsdelivr.net/gh/openlayers/openlayers.github.io@master/en/v6.7.0/build/ol.js"></script>
+        <script type="text/javascript" src="https://cdn.jsdelivr.net/gh/openlayers/openlayers.github.io@master/en/v6.15.1/build/ol.js"></script>
         <script src="js/app/olLayerControl.js"></script>
         <script src="js/app/olOpacityControl.js"></script>
-        <script src="https://cdn.rawgit.com/Viglino/ol-ext/master/dist/ol-ext.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/ol-ext@3.2.30/dist/ol-ext.min.js"></script>
         <script src="js/app/ol-layerswitcher.js"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/proj4js/2.7.5/proj4.js"></script>
-        <script src="http://epsg.io/25831.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/proj4js/2.8.0/proj4.js"></script>
+        <script src="https://epsg.io/25831.js"></script>
 
         <!-- angular-bootstrap-ui -->
         <script src="js/libs/angular-animate.min.js"></script>
