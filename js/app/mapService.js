@@ -8,7 +8,7 @@ angular.module('app').factory('mapService', map_service);
 
 var map							= null;		//map
 var backgroundMap				= null;		//backgroundMap 1- CartoDB light, 2- CartoDB dark
-var backgroundMapUrl			= 'http://{1-4}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png';
+var backgroundMapUrl			= 'https://{1-4}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png';
 var customLayer					= null;		//wms layer
 var highLightLayer				= null;		//layer for highlighted town
 var highLightSource				= null;		//source for highlifgted polygon
@@ -126,7 +126,7 @@ function map_service($http,$rootScope){
 	                        visible: mapid !== "poum",
 						    //minResolution: resolutions[baseLayerTopoZoom],
 	                        source: new ol.source.TileWMS({
-								url: 'http://geoserveis.icc.cat/icc_mapesmultibase/utm/wms/service?',
+								url: 'https://geoserveis.icc.cat/icc_mapesmultibase/utm/wms/service?',
 					            params: {'LAYERS': 'topogris', 'VERSION': '1.1.1'}
 								//url: urlWMS,
 					            //params: {'LAYERS': 'icgc_topo'},
@@ -168,7 +168,7 @@ function map_service($http,$rootScope){
 	                        type: 'base',
 	                        visible: false,
 	                        source: new ol.source.TileWMS({
-								url: 'http://geoserveis.icc.cat/icc_mapesmultibase/utm/wms/service?',
+								url: 'https://geoserveis.icc.cat/icc_mapesmultibase/utm/wms/service?',
 					            params: {'LAYERS': 'orto', 'VERSION': '1.1.1'}
 					            //url: urlWMS,
 					            //params: {'LAYERS': 'icgc_orto'},
@@ -567,7 +567,7 @@ function map_service($http,$rootScope){
 
 			source: new ol.source.Vector({
 				format: new ol.format.GeoJSON(),
-	            url: 'http://mapa.psig.es/qgisserver/wfs3/collections/'+layer.name+'/items.geojson?MAP=/home/ubuntu/ctbb/'+mapid+'.qgs&limit=1000'
+	            url: 'https://mapa.psig.es/qgisserver/wfs3/collections/'+layer.name+'/items.geojson?MAP=/home/ubuntu/ctbb/'+mapid+'.qgs&limit=1000'
 			}),
 		});
 	}
@@ -577,7 +577,7 @@ function map_service($http,$rootScope){
             title: 'Catastro',
             visible: false,
             source: new ol.source.TileWMS({
-            	url: 'http://ovc.catastro.meh.es/Cartografia/WMS/ServidorWMS.aspx',
+            	url: 'https://ovc.catastro.meh.es/Cartografia/WMS/ServidorWMS.aspx',
 	            params: {
 	            	'LAYERS': 'catastro', 
 	            	'TILED': true,
@@ -1056,7 +1056,7 @@ function map_service($http,$rootScope){
 				controls:
 				[	new ol.control.Toggle(
 						{	
-							html: '<svg height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><g transform="translate(0 -8)"><path d="m1.5000001 20.5h21v7h-21z" style="overflow:visible;fill:#c7c7c7;fill-rule:evenodd;stroke:#5b5b5c;stroke-width:.99999994;stroke-linecap:square"/><path d="m4.5 21v3" fill="none" stroke="#5b5b5c"/><path d="m7.5 21v3" fill="none" stroke="#5b5b5c"/><path d="m10.5 20v6" fill="none" stroke="#5b5b5c"/><path d="m13.5 21v3" fill="none" stroke="#5b5b5c"/><path d="m16.5 21v3" fill="none" stroke="#5b5b5c"/><path d="m19.5 21v3" fill="none" stroke="#5b5b5c"/><path d="m2.5 13v4" fill="none" stroke="#ffffff"/><path d="m21.5 13v4" fill="none" stroke="#ffffff"/><path d="m2 15h20" fill="none" stroke="#ffffff" stroke-width="1.99999988"/></g></svg>',
+							html: '<svg height="24" viewBox="0 0 24 24" width="24" xmlns="https://www.w3.org/2000/svg"><g transform="translate(0 -8)"><path d="m1.5000001 20.5h21v7h-21z" style="overflow:visible;fill:#c7c7c7;fill-rule:evenodd;stroke:#5b5b5c;stroke-width:.99999994;stroke-linecap:square"/><path d="m4.5 21v3" fill="none" stroke="#5b5b5c"/><path d="m7.5 21v3" fill="none" stroke="#5b5b5c"/><path d="m10.5 20v6" fill="none" stroke="#5b5b5c"/><path d="m13.5 21v3" fill="none" stroke="#5b5b5c"/><path d="m16.5 21v3" fill="none" stroke="#5b5b5c"/><path d="m19.5 21v3" fill="none" stroke="#5b5b5c"/><path d="m2.5 13v4" fill="none" stroke="#ffffff"/><path d="m21.5 13v4" fill="none" stroke="#ffffff"/><path d="m2 15h20" fill="none" stroke="#ffffff" stroke-width="1.99999988"/></g></svg>',
 							//autoActivate: true,
 							onToggle: function(b) { 
 								//console.log("Button 1 "+(b?"activated":"deactivated")); 
@@ -1066,7 +1066,7 @@ function map_service($http,$rootScope){
 						}),
 					new ol.control.Toggle(
 						{	
-							html: '<svg height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><g transform="translate(0 -8)"><path d="m1.5000001 20.5h21v7h-21z" style="overflow:visible;fill:#c7c7c7;fill-rule:evenodd;stroke:#5b5b5c;stroke-width:.99999994;stroke-linecap:square"/><path d="m4.5 21v3" fill="none" stroke="#5b5b5c"/><path d="m7.5 21v3" fill="none" stroke="#5b5b5c"/><path d="m10.5 20v6" fill="none" stroke="#5b5b5c"/><path d="m13.5 21v3" fill="none" stroke="#5b5b5c"/><path d="m16.5 21v3" fill="none" stroke="#5b5b5c"/><path d="m19.5 21v3" fill="none" stroke="#5b5b5c"/><path d="m2.5 9.5h5v2h14v7.5h-6.5v-5h-5v3.5h-7.5z" fill="#6d97c4" fill-rule="evenodd" stroke="#ffffff"/></g></svg>',
+							html: '<svg height="24" viewBox="0 0 24 24" width="24" xmlns="https://www.w3.org/2000/svg"><g transform="translate(0 -8)"><path d="m1.5000001 20.5h21v7h-21z" style="overflow:visible;fill:#c7c7c7;fill-rule:evenodd;stroke:#5b5b5c;stroke-width:.99999994;stroke-linecap:square"/><path d="m4.5 21v3" fill="none" stroke="#5b5b5c"/><path d="m7.5 21v3" fill="none" stroke="#5b5b5c"/><path d="m10.5 20v6" fill="none" stroke="#5b5b5c"/><path d="m13.5 21v3" fill="none" stroke="#5b5b5c"/><path d="m16.5 21v3" fill="none" stroke="#5b5b5c"/><path d="m19.5 21v3" fill="none" stroke="#5b5b5c"/><path d="m2.5 9.5h5v2h14v7.5h-6.5v-5h-5v3.5h-7.5z" fill="#6d97c4" fill-rule="evenodd" stroke="#ffffff"/></g></svg>',
 							onToggle: function(b) { 
 								//console.log("Button 2 "+(b?"activated":"deactivated")); 
 								measureActive = b;
@@ -1077,7 +1077,7 @@ function map_service($http,$rootScope){
 			});
 		mainToggle = new ol.control.Toggle(
 						{	
-							html: '<svg height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><g transform="translate(0 -8)"><path d="m1.5000001 20.5h21v7h-21z" style="overflow:visible;fill:#c7c7c7;fill-rule:evenodd;stroke:#5b5b5c;stroke-width:.99999994;stroke-linecap:square"/><path d="m4.5 21v3" fill="none" stroke="#5b5b5c"/><path d="m7.5 21v3" fill="none" stroke="#5b5b5c"/><path d="m10.5 20v6" fill="none" stroke="#5b5b5c"/><path d="m13.5 21v3" fill="none" stroke="#5b5b5c"/><path d="m16.5 21v3" fill="none" stroke="#5b5b5c"/><path d="m19.5 21v3" fill="none" stroke="#5b5b5c"/><path d="m2.5 13v4" fill="none" stroke="#ffffff"/><path d="m21.5 13v4" fill="none" stroke="#ffffff"/><path d="m2 15h20" fill="none" stroke="#ffffff" stroke-width="1.99999988"/></g></svg>',
+							html: '<svg height="24" viewBox="0 0 24 24" width="24" xmlns="https://www.w3.org/2000/svg"><g transform="translate(0 -8)"><path d="m1.5000001 20.5h21v7h-21z" style="overflow:visible;fill:#c7c7c7;fill-rule:evenodd;stroke:#5b5b5c;stroke-width:.99999994;stroke-linecap:square"/><path d="m4.5 21v3" fill="none" stroke="#5b5b5c"/><path d="m7.5 21v3" fill="none" stroke="#5b5b5c"/><path d="m10.5 20v6" fill="none" stroke="#5b5b5c"/><path d="m13.5 21v3" fill="none" stroke="#5b5b5c"/><path d="m16.5 21v3" fill="none" stroke="#5b5b5c"/><path d="m19.5 21v3" fill="none" stroke="#5b5b5c"/><path d="m2.5 13v4" fill="none" stroke="#ffffff"/><path d="m21.5 13v4" fill="none" stroke="#ffffff"/><path d="m2 15h20" fill="none" stroke="#ffffff" stroke-width="1.99999988"/></g></svg>',
 							bar: subBar,
 							onToggle: function(b) {
 								//console.log("main button "+(b?"activated":"deactivated"))
@@ -1330,7 +1330,7 @@ function map_service($http,$rootScope){
 		var inchesPerMetre = 39.3700787;
 		var dpi = 96;
 
-		return resolution * ol.proj.METERS_PER_UNIT[unit] * inchesPerMetre * dpi;
+		return resolution * ol.proj.Units.METERS_PER_UNIT[unit] * inchesPerMetre * dpi;
 	}
 
 	// print map resolution in m/px
@@ -1340,7 +1340,7 @@ function map_service($http,$rootScope){
 		var inchesPerMetre = 39.3700787;
 		var dpi = 120;
 
-		return scale / (ol.proj.METERS_PER_UNIT[unit] * inchesPerMetre * dpi);
+		return scale / (ol.proj.Units.METERS_PER_UNIT[unit] * inchesPerMetre * dpi);
 	}
 
 	function initPrintBox() {

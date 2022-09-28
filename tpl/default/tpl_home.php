@@ -495,7 +495,7 @@
         <script type="text/javascript" src="https://cdn.jsdelivr.net/gh/openlayers/openlayers.github.io@master/en/v6.15.1/build/ol.js"></script>
         <script src="js/app/olLayerControl.js"></script>
         <script src="js/app/olOpacityControl.js"></script>
-        <script src="https://cdn.jsdelivr.net/npm/ol-ext@3.2.30/dist/ol-ext.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/ol-ext@4.0.1/dist/ol-ext.min.js"></script>
         <script src="js/app/ol-layerswitcher.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/proj4js/2.8.0/proj4.js"></script>
         <script src="https://epsg.io/25831.js"></script>
