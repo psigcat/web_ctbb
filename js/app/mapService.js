@@ -37,7 +37,7 @@ var qgisSublayerSources			= {};
 var layerSwitcher;
 var mousePosition				= null;
 var mainBar, subBar, mainToggle, catastroLayer;
-var overlays, baseLayers, baseLayerMap, baseLayerFoto, baseLayerTopo, baseLayerTopoAMB, baseLayerNull;
+var overlays, baseLayers, baseLayerFoto, baseLayerTopo, baseLayerTopoAMB, baseLayerNull;
 var mapid, mapname;
 var QGIS_PROJECT_FILE;
 var printSource, printLayer, translatePrintBox, 
@@ -123,13 +123,10 @@ function map_service($http,$rootScope){
 	                        title: 'Topogràfic (by ICGC)',
 	                        qgistitle: '@ Capes topografiques - gris',
 	                        type: 'base',
-	                        visible: mapid !== "poum",
-						    //minResolution: resolutions[baseLayerTopoZoom],
+	                        visible: false,
 	                        source: new ol.source.TileWMS({
-								url: 'https://geoserveis.icc.cat/icc_mapesmultibase/utm/wms/service?',
+								url: 'http://geoserveis.icc.cat/icc_mapesmultibase/utm/wms/service?',
 					            params: {'LAYERS': 'topogris', 'VERSION': '1.1.1'}
-								//url: urlWMS,
-					            //params: {'LAYERS': 'icgc_topo'},
 					        })
 	                    });
 
@@ -138,28 +135,13 @@ function map_service($http,$rootScope){
 	                        title: 'Topogràfic (by AMB)',
 	                        qgistitle: '@ Capes topografiques AMB',
 	                        type: 'base',
-	                        visible: false,
-						    //maxResolution: resolutions[baseLayerTopoZoom],
-					    	source: new ol.source.TileArcGISRest({
-				    			url: 'http://geoportal.amb.cat/geoserveis/rest/services/topografia_1000_3857/MapServer',
+	                        visible: mapid !== "poum",
+	                        source: new ol.source.TileWMS({
+				    			url: 'https://ide.amb.cat/geoserveis/services/topografia_1000/MapServer/WMSServer',
 				    			projection: 'EPSG:3857',
-					            params: {'LAYERS': 'Nivell 1M'}
+					            params: {'LAYERS': '1,2,3,5,7,9,10,11,12,14,15,16,18,19,20,22,23,24,26,28,29'}
 				    		})
 				    	});
-
-	    /*baseLayerTopoAMB = new ol.layer.Tile({
-							name: 'baseLayerTopoAMB',
-	                        title: 'Topogràfic (by AMB)',
-	                        qgistitle: '@ Capes topografiques',
-	                        type: 'base',
-	                        visible: mapid != "poum",
-						    maxResolution: resolutions[18],
-					    	source: new ol.source.TileArcGISRest({
-				    			url: 'https://geoportal.amb.cat/arcgis/rest/services/Cartografia/MapaTopograficAMB1M_ETRS89/MapServer',
-				    			projection: 'EPSG:25831',
-					            params: {'LAYERS': 'Nivell 1k'}
-				    		})
-				    	});*/
 
 		baseLayerFoto = new ol.layer.Tile({
 							name: 'baseLayerFoto',
@@ -168,10 +150,8 @@ function map_service($http,$rootScope){
 	                        type: 'base',
 	                        visible: false,
 	                        source: new ol.source.TileWMS({
-								url: 'https://geoserveis.icc.cat/icc_mapesmultibase/utm/wms/service?',
+								url: 'http://geoserveis.icc.cat/icc_mapesmultibase/utm/wms/service?',
 					            params: {'LAYERS': 'orto', 'VERSION': '1.1.1'}
-					            //url: urlWMS,
-					            //params: {'LAYERS': 'icgc_orto'},
 					        })
 	                    });
 
@@ -183,10 +163,9 @@ function map_service($http,$rootScope){
 
 		baseLayers = [
 			baseLayerNull,
-			baseLayerTopo,
+			//baseLayerTopo,
 			baseLayerTopoAMB,
-			baseLayerFoto,
-			//baseLayerMap
+			baseLayerFoto
 		];
 
 	    // https://epsg.io/25831
@@ -280,12 +259,12 @@ function map_service($http,$rootScope){
 					}
 				});
 
-				view.on('change:resolution', function(e) {
+				/*view.on('change:resolution', function(e) {
 					if ($(".btn-olLayerMap").hasClass("active")) {
 						baseLayerTopo.setVisible(view.getZoom() <= baseLayerTopoZoom);
 						baseLayerTopoAMB.setVisible(view.getZoom() > baseLayerTopoZoom);
 					}
-				});
+				});*/
 
 				// l'ull del temps
 				if (mapid === 'ortofotos_historial') {
@@ -409,143 +388,146 @@ function map_service($http,$rootScope){
 
 	    for (let i=overlays.length-1; i>=0; i--) {
 
-	    	let layer = overlays[i],
-	    		layer_name = null, 
-	    		url = null,
-	    		type = null,
-	    		projection = null,
-	    		version = null,
-	    		transparent = null;
+	    	if (overlays[i].name !== "@ Catastro" && overlays[i].name !== "@ Capes topografiques AMB" && overlays[i].name !== "@ Capes ortofotografiques") {
 
-	    	// make wfs layer list
-	    	if (!external) {
+		    	let layer = overlays[i],
+		    		layer_name = null, 
+		    		url = null,
+		    		type = null,
+		    		projection = null,
+		    		version = null,
+		    		transparent = null;
 
-	    		if (layer.children) {
+		    	// make wfs layer list
+		    	if (!external) {
 
-	    			// layer group
-		    		let groupLayers = [];
+		    		if (layer.children) {
 
-		    		// vector layer, one layer for every group child
-		    		//layer.children.forEach(function(sublayer, i) {
-		    		for (let j=layer.children.length-1; j>=0; j--) {
+		    			// layer group
+			    		let groupLayers = [];
 
-		    			if (layer.children[j].vectorial) {
+			    		// vector layer, one layer for every group child
+			    		//layer.children.forEach(function(sublayer, i) {
+			    		for (let j=layer.children.length-1; j>=0; j--) {
 
-			    			let sublayer = layer.children[j];
-			    			//console.log(i, j, sublayer.name);
+			    			if (layer.children[j].vectorial) {
 
-				            let vectorLayer = defineWfsLayer(sublayer);
+				    			let sublayer = layer.children[j];
+				    			//console.log(i, j, sublayer.name);
 
-							groupLayers.push(vectorLayer);
-							if (layer.name != "") {
-								renderedLayersVectorial[layer.name] = vectorLayer;
+					            let vectorLayer = defineWfsLayer(sublayer);
+
+								groupLayers.push(vectorLayer);
+								if (layer.name != "") {
+									renderedLayersVectorial[layer.name] = vectorLayer;
+								}
+
+								// apply style
+								fetch("js/data/sld/"+mapid+".qgs_"+sublayer.name+".sld")
+									.then(response => response.text())
+									.then(sld => applyVectorStyle(vectorLayer, sld, sublayer.name));
 							}
-
-							// apply style
-							fetch("js/data/sld/"+mapid+".qgs_"+sublayer.name+".sld")
-								.then(response => response.text())
-								.then(sld => applyVectorStyle(vectorLayer, sld, sublayer.name));
 						}
-					}
 
-					if (groupLayers.length > 0) {
-						layers.push(new ol.layer.Group({
-			    			title: layer.name,
-			    			mapproxy: layer.mapproxy,
-			    			combine: true,
-			    			visible: layer.visible,
-			    			layers: groupLayers,
-			    		}));
-			    	}
-			    }
-			    else if (layer.vectorial) {
-			    	// layer
-					console.log(layer.name);
+						if (groupLayers.length > 0) {
+							layers.push(new ol.layer.Group({
+				    			title: layer.name,
+				    			mapproxy: layer.mapproxy,
+				    			combine: true,
+				    			visible: layer.visible,
+				    			layers: groupLayers,
+				    		}));
+				    	}
+				    }
+				    else if (layer.vectorial) {
+				    	// layer
+						console.log(layer.name);
 
-		            let vectorLayer = defineWfsLayer(layer);
+			            let vectorLayer = defineWfsLayer(layer);
 
-					// apply style
-					fetch("js/data/sld/"+mapid+".qgs_"+layer.name+".sld")
-						.then(response => response.text())
-						.then(sld => applyVectorStyle(vectorLayer, sld, layer.name));
+						// apply style
+						fetch("js/data/sld/"+mapid+".qgs_"+layer.name+".sld")
+							.then(response => response.text())
+							.then(sld => applyVectorStyle(vectorLayer, sld, layer.name));
 
-		    		layers.push(vectorLayer);
-			    }
-	    	}
+			    		layers.push(vectorLayer);
+				    }
+		    	}
 
-	    	if (!external && !layer.external) {
-	    		// intern server (qgis or mapproxy)
-	    		if (layer.mapproxy) {
-		    		layer_name = layer.mapproxy;	// mapproxy
-		    		url = urlWMS;
-	    		}
-	    		else {
-		    		layer_name = layer.name;	// qgis
-		    		url = urlWMSqgis;
-	    		}
-	    		type = layer.type;
-	    		projection = 'EPSG:3857';
-	    		version = '1.3.0';
-	    		transparent = true;
-	    	}
-	    	else if (external && layer.external) {
-	    		//console.log(external, layer.mapproxy, layer_name, url, layer_name && url);
-	    		// extern server (wms)
-	    		url = layer.wmsUrl;
-	    		layer_name = layer.wmsLayers;
-	    		type = "orto";
-	    		projection = layer.wmsProjection;
-	    		version = '1.1.1';
-	    		transparent = false;
-	    	}
+		    	if (!external && !layer.external) {
+		    		// intern server (qgis or mapproxy)
+		    		if (layer.mapproxy) {
+			    		layer_name = layer.mapproxy;	// mapproxy
+			    		url = urlWMS;
+		    		}
+		    		else {
+			    		layer_name = layer.name;	// qgis
+			    		url = urlWMSqgis;
+		    		}
+		    		type = layer.type;
+		    		projection = 'EPSG:3857';
+		    		version = '1.3.0';
+		    		transparent = true;
+		    	}
+		    	else if (external && layer.external) {
+		    		//console.log(external, layer.mapproxy, layer_name, url, layer_name && url);
+		    		// extern server (wms)
+		    		url = layer.wmsUrl;
+		    		layer_name = layer.wmsLayers;
+		    		type = "orto";
+		    		projection = layer.wmsProjection;
+		    		version = '1.1.1';
+		    		transparent = false;
+		    	}
 
-	    	if (layer_name && url) {
+		    	if (layer_name && url) {
 
-				var layerSource = new ol.source.TileWMS({
-					url: 		url,
-					projection: projection,
-					params: {
-								'LAYERS': layer_name,
-								'TRANSPARENT': transparent,
-								'VERSION': version,
-					},
-					serverType: 'qgis',									
-					//gutter: 	256
-				});
-
-	            var newLayer = 
-	            	new ol.layer.Tile({
-	            		title: layer.name,
-	            		qgisname: layer.qgisname,
-	            		mapproxy: layer.mapproxy,
-	            		type: type,
-						source: layerSource,
-						showlegend: layer.showlegend,
-	                    visible: layer.visible,
-		                hidden: layer.hidden,
-		                children: layer.children,
-		                fields: layer.fields,
-		                indentifiable: layer.indentifiable,
-		                vectorial: layer.vectorial,
+					var layerSource = new ol.source.TileWMS({
+						url: 		url,
+						projection: projection,
+						params: {
+									'LAYERS': layer_name,
+									'TRANSPARENT': transparent,
+									'VERSION': version,
+						},
+						serverType: 'qgis',									
+						//gutter: 	256
 					});
 
-				let vectorial = true;
-				if (layer.children) {
-					for (let j=layer.children.length-1; j>=0; j--) {
-		    			if (!layer.children[j].vectorial) {
-		    				vectorial = false;
-		    				break;
-		    			}
-		    		}
-				}
-				else if (!layer.vectorial) {
-					vectorial = false;
-				}
+		            var newLayer = 
+		            	new ol.layer.Tile({
+		            		title: layer.name,
+		            		qgisname: layer.qgisname,
+		            		mapproxy: layer.mapproxy,
+		            		type: type,
+							source: layerSource,
+							showlegend: layer.showlegend,
+		                    visible: layer.visible,
+			                hidden: layer.hidden,
+			                children: layer.children,
+			                fields: layer.fields,
+			                indentifiable: layer.indentifiable,
+			                vectorial: layer.vectorial,
+						});
 
-				if (!vectorial) layers.push(newLayer);
+					let vectorial = true;
+					if (layer.children) {
+						for (let j=layer.children.length-1; j>=0; j--) {
+			    			if (!layer.children[j].vectorial) {
+			    				vectorial = false;
+			    				break;
+			    			}
+			    		}
+					}
+					else if (!layer.vectorial) {
+						vectorial = false;
+					}
 
-				if (layer.name != "") {
-					renderedLayers[layer.name] = newLayer;
+					if (!vectorial) layers.push(newLayer);
+
+					if (layer.name != "") {
+						renderedLayers[layer.name] = newLayer;
+					}
 				}
 			}
 		}
