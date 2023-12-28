@@ -388,7 +388,7 @@ function map_service($http,$rootScope){
 
 	    for (let i=overlays.length-1; i>=0; i--) {
 
-	    	if (overlays[i].name !== "@ Catastro" && overlays[i].name !== "@ Capes topografiques AMB" && overlays[i].name !== "@ Capes ortofotografiques") {
+	    	if (overlays[i].name !== "@ Catastro" && overlays[i].name !== "@ Capes topografiques AMB" && overlays[i].name !== "@ Capes ortofotografiques" && overlays[i].name !== "@ Capes topografiques - gris") {
 
 		    	let layer = overlays[i],
 		    		layer_name = null, 
@@ -683,7 +683,12 @@ function map_service($http,$rootScope){
 
 	    Object.keys(qgisSources).forEach(function(key){
 
-    		//console.log(key, renderedLayers[key].getVisible(), renderedLayers[key].get("vectorial"), renderedLayers[key].get("indentifiable"), renderedLayers[key].get("children"));
+    		if ((key !== "@ Capes topografiques - gris" &&
+				key !== "@ Capes topografiques AMB" &&
+				key !== "@ Capes ortofotografiques" &&
+				key !== "@ Catastro"))
+
+	    	//console.log(key, renderedLayers[key].getVisible(), renderedLayers[key].get("vectorial"), renderedLayers[key].get("indentifiable"), renderedLayers[key].get("children"));
 
     		if (renderedLayers[key].getVisible() || renderedLayers[key].get("vectorial") && renderedLayersVectorial[key].getVisible()) {
 

@@ -98,7 +98,7 @@ Controller.$inject = [
             $("#searchNumero").on("change", function() {
                 var x = Number(this.options[this.selectedIndex].getAttribute('data-x'));
                 var y = Number(this.options[this.selectedIndex].getAttribute('data-y'));
-                
+
                 if ($scope.isNumeric(x) && $scope.isNumeric(y)) {
 					mapService.zoomToCoord(x,y);
 				}
@@ -286,10 +286,10 @@ Controller.$inject = [
 			    // add results to select
 			    $("#searchNumero").empty();
 			    $("#searchNumero").append('<option value="-1">-  Triï una opció  -</option>');
-			    for (var i in data.message) {
-			    	var geom = JSON.parse(data.message[i].geom);
-			    	$("#searchNumero").append('<option data-x="'+geom.coordinates[0][0]+'" data-y="'+geom.coordinates[0][1]+'">'+data.message[i].num+'</option>');
-			    }
+				for (var i in data.message) {
+					let geom = JSON.parse(data.message[i].geom);
+					$("#searchNumero").append('<option data-x="'+geom.coordinates[0]+'" data-y="'+geom.coordinates[1]+'">'+data.message[i].num+'</option>');
+				}
 			})
 			.catch(function (error) {
 			 	log("error in getStreetNum: ", error);
