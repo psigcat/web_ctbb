@@ -143,7 +143,7 @@ function map_service($http,$rootScope){
 				    		})
 				    	});
 
-		baseLayerFoto = new ol.layer.Tile({
+		/*baseLayerFoto = new ol.layer.Tile({
 							name: 'baseLayerFoto',
 	                        title: 'Ortofoto (by ICGC)',
 	                        qgistitle: '@ Capes ortofotografiques',
@@ -153,6 +153,29 @@ function map_service($http,$rootScope){
 								url: 'http://geoserveis.icc.cat/icc_mapesmultibase/utm/wms/service?',
 					            params: {'LAYERS': 'orto', 'VERSION': '1.1.1'}
 					        })
+	                    });*/
+
+		baseLayerFoto = new ol.layer.Tile({
+							name: 'baseLayerFoto',
+	                        title: 'Ortofoto (by IGN)',
+	                        qgistitle: '@ Capes ortofotografiques',
+	                        type: 'base',
+	                        visible: false,
+	                        source: new ol.source.WMTS({
+								url: 'https://www.ign.es/wmts/pnoa-ma',
+				                layer: 'OI.OrthoimageCoverage',
+								matrixSet: 'EPSG:4326',
+								//matrixSet: 'EPSG:3857',
+								format: 'image/png',
+								projection: ol.proj.get('EPSG:4326'),
+								tileGrid: new ol.tilegrid.WMTS({
+								  origin: ol.extent.getTopLeft(projectionExtentBG),
+								  resolutions: resolutionsBG,
+								  matrixIds: matrixIdsBG
+								}),
+								style: 'default',
+					            attributions: 'Instituto Geográfico Nacional de España'
+						 	})
 	                    });
 
 		baseLayerNull = new ol.layer.Tile({
