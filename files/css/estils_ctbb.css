@@ -1,0 +1,84 @@
+/*
+//************************************************************************
+//
+// Estils Castellbisbal
+//
+// CSS principal
+//
+//************************************************************************
+*/
+
+	body {
+		font-family: Arial,Helvetica,Verdana,sans-serif;
+		font-size:0.75em;
+		padding: 1em;
+		
+	}
+
+	h1 {
+	  font-family: Arial;
+	  font-size: 40px;
+	  color: black;
+	  text-align: center;
+	}
+
+	p {
+	  font-family: Arial;
+	  font-size: 12pt;
+	}
+
+	blockquote {
+	  font-family: Arial;
+	  font-size: 12pt;
+	}
+
+	li {
+	  font-family: Arial;
+	  font-weight: bold;
+	  font-size: 12pt;
+	}
+
+	td {
+	  font-family: Arial;
+	  font-size: 12pt;
+	}
+	
+	table{
+		margin-left:auto;
+		margin-right:auto;
+		border-collapse: collapse
+	}
+
+    th {
+        font-weight: bold;
+    }
+	
+	table td{
+		padding: 0.5em;
+		border: 1px solid #000000;
+        font-family: Arial;
+	    font-size: 12pt;
+        text-align: center;
+	}
+	
+	.img_table{
+	
+		margin-left:auto;
+		margin-right:auto;
+		border-collapse: collapse
+	
+	}
+	
+	.img_table td{
+		font-size:0.75em;
+		padding: 0.5em;
+		border: 0x solid #ffffff;
+		
+	}
+	
+		.img_table.td{
+		font-size:0.75em;
+		padding: 0.5em;
+		border: 0x solid #ffffff;
+		
+	}

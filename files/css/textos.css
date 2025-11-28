@@ -1,0 +1,69 @@
+/*
+//************************************************************************
+//
+// Copyright (c) 2007 by Geodata Sistemas S.L.
+// http://www.geodata.es
+//
+// CSS principal
+//
+//************************************************************************
+*/
+
+	body {
+		font-family: Arial,Helvetica,Verdana,sans-serif;
+		font-size:0.75em;
+		padding: 1em;
+		
+	}
+	
+	.spanTitle{
+		font-size:1.75em;
+		color: #800040;
+	}
+	.spanArt{
+		font-weight: bold;
+	}
+	
+	.divTableContainer{
+		width:100%;
+		text-align:center
+	}
+	
+	table{
+		margin-left:auto;
+		margin-right:auto;
+		border-collapse: collapse
+	}
+
+    th {
+        font-weight: bold;
+    }
+	
+	table td{
+		padding: 0.5em;
+		border: 1px solid #000000;
+        font-size: 0.75em;
+        text-align: center;
+	}
+	
+	.img_table{
+	
+		margin-left:auto;
+		margin-right:auto;
+		border-collapse: collapse
+	
+	}
+	
+	.img_table td{
+		font-size:0.75em;
+		padding: 0.5em;
+		border: 0x solid #ffffff;
+		
+	}
+	
+		.img_table.td{
+		font-size:0.75em;
+		padding: 0.5em;
+		border: 0x solid #ffffff;
+		
+	}
